@@ -6,12 +6,14 @@ import { MuiOtpInput } from 'mui-one-time-password-input';
 import toast from 'react-hot-toast';
 import { useTimer } from 'use-timer';
 
+
 //AGGIUSTARE IL CODICE E LA FORMATTAZIONE. IMPLEMENTARE IL NUMERO MASSIMO DI INVIO DI OTP PER GIORNO
 
 const PopupOTP = ({ isVisible, onClose, email }) => {
 
     const [otp, setOtp] = useState('');
     const navigate = useNavigate();
+
     const { time, start, reset, status } = useTimer({
         initialTime: 300000, // 5 minuti in millisecondi
         timerType: 'DECREMENTAL',
@@ -47,7 +49,7 @@ const PopupOTP = ({ isVisible, onClose, email }) => {
             toast.success("OTP verificato con successo");
             //AGGIUNGERE FUNZIONE GRAFICA DI CARICAMENTO DI 2/3 SECONDI PER POI REINDIRIZZARE VERSO LA PAGINA DI CAMBIO PASSWORD
             setTimeout(() => {
-                navigate('/ResetPassword');
+                navigate('/ResetPassword', { state: { email } });
             }, 1500); // 1500 ms = 1,5 secondi
         } catch (error) {
             //RI-VERIFICARE SE GLI ERRORI VENGONO STAMPATI CORRETTAMENTE
