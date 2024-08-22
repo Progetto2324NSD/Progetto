@@ -12,7 +12,7 @@ const express = require('express');
 const router = express.Router();
 
 //Richiamo il Controller
-const { createUser, loginUser, getData, mailOTP, verificaOTP } = require("../controllers/userController");
+const { createUser, loginUser, getData, mailOTP, verificaOTP, cambiaPassword } = require("../controllers/userController");
 
 //"Proteggo" la chiamata dell'API getData tramite Middleware
 const { protect } = require("../middlewares/authMiddleware");
@@ -25,6 +25,7 @@ router.get('/data', protect, getData);
 //Utilizzo API reset Password (UTENTE) Prima API verificata, da verificare la seconda
 router.post('/reset-password', mailOTP);
 router.post('/verificaOTP', verificaOTP);
+router.post('/cambia-password', protect, cambiaPassword);
 
 //RICORDA QUANDO CHIAMO UN API PER I DATA DEVO PROTEGGERLE ES: router.route('/').get(protect, getGoals).post(setGoals)
 
