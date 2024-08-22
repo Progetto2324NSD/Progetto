@@ -1,6 +1,7 @@
 import React from "react";
 import { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
+import axios from "../../api_vespe/axiosConfig";
 
 //Componenti
 import PasswordInput from "../../components/PasswordInput";
@@ -9,6 +10,8 @@ import PasswordInput from "../../components/PasswordInput";
 import "../stile/style.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import immagineReset from '../../utils/images/reset.png';
+import toast from "react-hot-toast";
+import { useLocation } from "react-router-dom";
 
 
 function Reset() {
@@ -16,9 +19,42 @@ function Reset() {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
 
+    const navigate = useNavigate();
+    const location = useLocation(); 
+    const email = location.state?.email;
+
+    function validatePassword(password) {
+        // Regex per validare la password (CONTROLLARE SE LA STRINGA E' CORRETTA)
+        const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>]).{8,}$/;
+        return regex.test(password);
+    }
+
     const submitHandler = async (e) => {
 
-        e.preventDefault();
+        try{
+            e.preventDefault();
+
+            if (password !== confirmPassword) {
+                toast.error("Le password non coincidono");
+                return;
+            }
+
+            if (!validatePassword(password)) {
+                toast.error("Password non valida. Assicurati che contenga: \n - Almeno 8 caratteri \n - Almeno una lettera minuscola; \n - Almeno una lettera maiuscola; \n - Almeno un numero; \n - Almeno un carattere speciale ");
+                return;
+            }
+
+            const response = await axios.post('/user/cambia-password', { email, password });
+
+            if (response.status === 200) {
+                toast.success("Password aggiornata con successo");
+                setTimeout(() => {
+                    navigate('/Dashboard');
+                }, 1500); // 1500 ms = 1,5 secondi
+            }
+        }catch(error){
+            toast.error("Errore durante la registrazione. Riprova più tardi.");
+        }
     
     }
 
