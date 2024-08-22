@@ -171,10 +171,11 @@ const mailOTP = asyncHandler(async (req, res) => {
     }
 });
 
-
+//Aggiungere DESCRIZIONE E VEDERE COME PROTEGGERE IL CAMBIO PASSWORD
 const verificaOTP = asyncHandler(async (req, res) => {
     try {
         const { email, otp } = req.body;
+        const flagOtp = true;
 
         const user = await User.findOne({ email });
 
@@ -189,12 +190,43 @@ const verificaOTP = asyncHandler(async (req, res) => {
 
         if (user.resetOtpExpires < Date.now()) {
             return res.status(400).json({ message: 'OTP scaduto' });
+            flagOtp = false;
         }
+
+        /*if(user && isMatch && flagOtp){
+            token: generateToken(user._id);
+        }*/
 
         res.status(200).json({ message: 'OTP verificato' });
     } catch (error) {
         console.error('Errore durante la verifica dell\'OTP:', error);
         res.status(500).json({ message: 'Errore interno del server' });
+    }
+});
+
+// @desc Cambia password post verifica OTP
+// @route POST /user/cambia-password
+// @access Provate
+const cambiaPassword = asyncHandler(async (req, res) => {
+    try{
+        const { email, password } = req.body;
+
+        const user = await User.findOne({ email });
+
+        //password hasata 
+        const salt = bcrypt.genSaltSync(10);
+        const hash = bcrypt.hashSync(password, salt);
+
+        // Assegna l'hash della nuova password al campo password dell'utente
+        user.password = hash;
+
+        // Salva l'utente aggiornato nel database
+        await user.save();
+
+        res.status(200).json({ message: 'Password cambiata con successo' });
+
+    }catch(error){
+        res.status(200).json({ message: 'Errore' });
     }
 });
 
@@ -211,5 +243,6 @@ module.exports = {
     loginUser,
     getData,
     mailOTP,
-    verificaOTP
+    verificaOTP,
+    cambiaPassword,
 }
