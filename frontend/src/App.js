@@ -5,8 +5,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Dashboard from './pages/Dashboard';
-import ForgotPassword from './pages/resetPassword/Forgot';
-import ResetPassword from './pages/resetPassword/Reset';
+import ForgotPassword from './pages/Forgot';
+import ResetPassword from './pages/Reset';
 
 function App() {
   return (
