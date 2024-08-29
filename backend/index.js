@@ -4,6 +4,7 @@ const dotenv = require('dotenv').config();
 const colors = require('colors');
 const { errorHandler } = require('./middlewares/errorMiddleware.js');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 
 //chiamo db.js per la connessione a MONGO DB (ricordare URL in .env)
 const connectDB = require('./config/db.js');
@@ -16,8 +17,14 @@ connectDB();
 //Inizializzo l'app express
 const app = express();
 
-//Cors per permettere le richieste da altri domini
-app.use(cors());
+//Cors per permettere le richieste da altri domini (RICORDARSI IL "credentials: true") Altrimenti non invia un caBBo
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true
+}));
+
+//Parser dei cookies
+app.use(cookieParser());
 
 //Per usare il body
 app.use(express.json())
