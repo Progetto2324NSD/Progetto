@@ -83,7 +83,11 @@ function Register() {
 
     try{
       // Chiamata API per la registrazione dell'utente
-      const response = await axios.post('/user', userData);
+      const response = await axios.post('/user', userData, {
+        withCredentials: true
+      });
+
+      localStorage.setItem('user', JSON.stringify(response.data));
 
       // Se la registrazione ha successo, mostra il caricamento
       // Mostra la rotellina di caricamento
