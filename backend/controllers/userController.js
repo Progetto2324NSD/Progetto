@@ -51,13 +51,24 @@ const createUser = asyncHandler (async (req, res) => {
     });
 
     //Verifico che l'utente sia stato creato correttamente
-    if(user) {
-        res.status(201).json( {
+    if (user) {
+        // Genera il token JWT
+        const token = generateToken(user._id);
+
+        // Imposta il cookie con il token JWT
+        res.cookie('token', token, {
+            httpOnly: true, // Impedisce l'accesso al cookie dal lato client (JavaScript)
+            secure: process.env.NODE_ENV === 'production', // Imposta il cookie come sicuro in produzione
+            sameSite: 'Strict', // Evita l'invio del cookie nelle richieste cross-site
+            //maxAge: 3600000 // 1 ora in ms (LASCIARE COMMENTATO PERCHè FUNZIONERà DA SESSION STORAGE)
+        });
+
+        // Invia la risposta con i dettagli dell'utente
+        res.status(201).json({
             _id: user._id,
             name: user.name,
             email: user.email,
-            token: generateToken(user._id)
-        })
+        });
     }else{
         res.status(400).json({message: "Errore durante la creazione dell'utente"});
     }
@@ -81,11 +92,22 @@ const loginUser = asyncHandler(async (req, res) => {
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
     if (user && isPasswordValid) {
+
+        const token = generateToken(user._id);
+
+        // Imposta il cookie con il token
+        res.cookie('token', token, {
+            httpOnly: true,    // Impedisce l'accesso al cookie tramite JavaScript lato client
+            secure: process.env.NODE_ENV === 'production', // Imposta secure a true in produzione (richiede HTTPS)
+            sameSite: 'strict',
+            //maxAge: 3600000    // 1 ora in ms (LASCIARE COMMENTATO PERCHè FUNZIONERà DA SESSION STORAGE)
+        });
+
         res.json({
             _id: user._id,
             name: user.name,
             email: user.email,
-            token: generateToken(user._id),
+            //token: token,
         });
     } else {
         res.status(401).json({ message: 'Email o password non validi' });
@@ -175,7 +197,7 @@ const mailOTP = asyncHandler(async (req, res) => {
 const verificaOTP = asyncHandler(async (req, res) => {
     try {
         const { email, otp } = req.body;
-        const flagOtp = true;
+        let otpFlag = true;
 
         const user = await User.findOne({ email });
 
@@ -189,18 +211,34 @@ const verificaOTP = asyncHandler(async (req, res) => {
         }
 
         if (user.resetOtpExpires < Date.now()) {
+            otpFlag = false;
             return res.status(400).json({ message: 'OTP scaduto' });
-            flagOtp = false;
         }
 
-        /*if(user && isMatch && flagOtp){
-            token: generateToken(user._id);
-        }*/
+        if (user && isMatch && otpFlag) {
 
-        res.status(200).json({ message: 'OTP verificato' });
+            const token = generateToken(user._id);
+
+            // Imposta il cookie con il token JWT
+            res.cookie('token', token, {
+                httpOnly: true, // Impedisce l'accesso al cookie dal lato client (JavaScript)
+                secure: process.env.NODE_ENV === 'production', // Imposta il cookie come sicuro in produzione
+                sameSite: 'Strict', // Evita l'invio del cookie nelle richieste cross-site
+                //maxAge: 3600000 // 1 ora in ms (LASCIARE COMMENTATO PERCHè FUNZIONERà DA SESSION STORAGE)
+            });
+
+            // Assicurati che il token sia incluso nella risposta JSON
+            return res.json({
+                email: user.email,
+            });
+            
+        } else {
+            return res.status(401).json({ message: 'Email o password non validi' });
+        }
+
     } catch (error) {
         console.error('Errore durante la verifica dell\'OTP:', error);
-        res.status(500).json({ message: 'Errore interno del server' });
+        return res.status(500).json({ message: 'Errore interno del server' });
     }
 });
 
@@ -231,7 +269,7 @@ const cambiaPassword = asyncHandler(async (req, res) => {
 });
 
 
-//Genero il tokenJWT per il login
+//Genero il tokenJWT per il login/registrazione e password dimenticata
 const generateToken = (id) => {
     return jwt.sign({id}, process.env.JWT, {
         expiresIn: '1h'
