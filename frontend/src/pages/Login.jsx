@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import axios from "../api_vespe/axiosConfig";
+import { loginUser } from '../service/userService';  // Importa la funzione
 
 //Stile
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -37,7 +37,7 @@ function Login() {
     //Caricamento a false, evito che in caso di errore rimanga inutilmente
     setLoading(false);
 
-    //Verifico se i campi sono stati poplati
+    //Verifico se i campi sono stati popolati
     if (!email || !password) {
       toast.error("Compilare tutti i campi");
       return;
@@ -49,17 +49,14 @@ function Login() {
       return;
     }
 
-    //Dati dell'utente da inviare (obs tutti)
+    //Dati dell'utente da inviare
     const userData = { 
       email, 
       password 
     };
 
     try{
-      // Chiamata API per la registrazione dell'utente
-      const response = await axios.post('/user/login', userData, {
-        withCredentials: true
-      });
+      const response = await loginUser(userData);  // Usa la funzione esterna
 
       localStorage.setItem('user', JSON.stringify(response.data));
 
@@ -74,7 +71,7 @@ function Login() {
         toast.success("Accesso avvenuto con successo", {
           id: loadingToast, // Aggiorna il toast di caricamento
         });
-        // Reindirizzo alla dahboard (CONFRONTARSI PER AGGIUNGERE L'ETA' AL PRIMO ACCESSO(?))
+        // Reindirizzo alla dashboard (CONFRONTARSI PER AGGIUNGERE L'ETA' AL PRIMO ACCESSO(?))
         navigate('/Dashboard');
       }
     }catch(error){
@@ -175,3 +172,4 @@ function Login() {
 }
 
 export default Login;
+
