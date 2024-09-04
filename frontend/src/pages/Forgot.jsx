@@ -1,43 +1,92 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from 'react-router-dom';
-import axios from "../api_vespe/axiosConfig";
 import immagineForgot from "../utils/images/forgotPass.png";
 import toast from "react-hot-toast";
 import PopOTP from "./PopupOTP";
+import { resetPassword } from "../service/userService"; // Funzione che invia la richiesta
 
 function Forgot() {
     const [email, setEmail] = useState("");
     const [showModal, setShowModal] = useState(false);
-    const [isSubmitting, setIsSubmitting] = useState(false); // Nuovo stato per gestire il bottone
+    const [isSubmitting, setIsSubmitting] = useState(false); // Stato per gestire il bottone
+    const [attemptsLeft, setAttemptsLeft] = useState(5); // Stato per tenere traccia degli invii rimanenti
+
+    // Funzione per gestire il limite giornaliero di invii
+    const checkResetAttempts = (email) => {
+        const storedData = localStorage.getItem(email);
+        const currentDate = new Date().toDateString(); // Otteniamo solo la data corrente (senza ora)
+
+        if (storedData) {
+            const { count, lastRequestDate } = JSON.parse(storedData);
+            
+            // Se la data è quella corrente, controlliamo il numero di tentativi rimanenti
+            if (lastRequestDate === currentDate) {
+                setAttemptsLeft(5 - count);
+                if (count >= 5) {
+                    toast.error("Hai raggiunto il limite giornaliero di 5 richieste.");
+                    setIsSubmitting(true); // Disabilita il bottone
+                    return false; // Limite raggiunto, blocca invio
+                }
+            } else {
+                // Se la data è diversa, resettiamo il conteggio per il nuovo giorno
+                localStorage.setItem(email, JSON.stringify({ count: 0, lastRequestDate: currentDate }));
+                setAttemptsLeft(5);
+            }
+        } else {
+            // Nessun dato salvato, inizializziamo per questa email
+            localStorage.setItem(email, JSON.stringify({ count: 0, lastRequestDate: currentDate }));
+            setAttemptsLeft(5);
+        }
+        return true; // Permetti invio
+    };
+
+    // Funzione per aggiornare i tentativi nel localStorage
+    const updateResetAttempts = (email) => {
+        const storedData = localStorage.getItem(email);
+        const { count, lastRequestDate } = JSON.parse(storedData);
+        const newCount = count + 1;
+
+        // Aggiorna i dati nel localStorage
+        localStorage.setItem(email, JSON.stringify({ count: newCount, lastRequestDate }));
+        setAttemptsLeft(5 - newCount); // Aggiorna tentativi rimanenti
+    };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        // Imposta il bottone come disabilitato e avvia il finto caricamento
+        if (!checkResetAttempts(email)) {
+            // Se il limite è stato raggiunto, blocchiamo l'invio
+            return;
+        }
+
         setIsSubmitting(true);
 
         try {
-            const response = await axios.post('/user/reset-password', { email });
+            const response = await resetPassword(email);  // Usa la funzione di servizio esterna
     
             if (response.status === 200) {
                 let countdown = 3;
                 const countdownToast = toast.loading(`Email inviata con successo. \n Il pop-up si aprirà tra: ${countdown} secondi...`, {
                     duration: 3000,
                 });
-    
+
                 const interval = setInterval(() => {
                     countdown -= 1;
                     toast.loading(`Email inviata con successo. \n Il pop-up si aprirà tra: ${countdown} secondi...`, {
                         id: countdownToast,
                     });
                 }, 1000);
-    
+
                 setTimeout(() => {
                     clearInterval(interval);
                     toast.dismiss(countdownToast);  // Rimuove il toast del countdown
                     setShowModal(true);  // Mostra il popup per inserire l'OTP
                     setIsSubmitting(false); // Riabilita il bottone
                 }, 3000);
+
+                // Aggiorna il numero di tentativi
+                updateResetAttempts(email);
+
             } else {
                 toast.error("Errore durante l'invio dell'email.");
                 setIsSubmitting(false); // Riabilita il bottone anche in caso di errore
@@ -49,6 +98,13 @@ function Forgot() {
             setIsSubmitting(false); // Riabilita il bottone in caso di errore
         }
     }
+
+    // Controlla i tentativi rimanenti al montaggio del componente
+    useEffect(() => {
+        if (email) {
+            checkResetAttempts(email);
+        }
+    }, [email]);
 
     return (
         <div className="container d-flex justify-content-center align-items-center min-vh-100">
@@ -110,3 +166,4 @@ function Forgot() {
 }
 
 export default Forgot;
+
