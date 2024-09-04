@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from 'react';
-import axios from "../api_vespe/axiosConfig";
+import { registerUser } from '../service/userService';  // Importa la funzione di servizio
 import toast from "react-hot-toast";
 
 //Stile
@@ -74,7 +74,7 @@ function Register() {
       return;
     }
 
-    //Dati dell'utente da inviare (obs tutti)
+    //Dati dell'utente da inviare
     const userData = { 
       name, 
       email, 
@@ -82,10 +82,7 @@ function Register() {
     };
 
     try{
-      // Chiamata API per la registrazione dell'utente
-      const response = await axios.post('/user', userData, {
-        withCredentials: true
-      });
+      const response = await registerUser(userData);  // Usa la funzione di servizio
 
       localStorage.setItem('user', JSON.stringify(response.data));
 
@@ -100,7 +97,7 @@ function Register() {
         toast.success("Registrazione avvenuta con successo", {
           id: loadingToast, // Aggiorna il toast di caricamento
         });
-        // Reindirizzo alla dahboard (CONFRONTARSI PER AGGIUNGERE L'ETA' AL PRIMO ACCESSO(?))
+        // Reindirizzo alla dashboard (CONFRONTARSI PER AGGIUNGERE L'ETA' AL PRIMO ACCESSO(?))
         navigate('/Dashboard');
       }
     }catch(error){
@@ -198,3 +195,4 @@ function Register() {
 }
 
 export default Register;
+
