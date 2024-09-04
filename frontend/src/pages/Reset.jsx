@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
-import axios from "../api_vespe/axiosConfig";
+import { cambiaPassword } from '../service/userService';
 
 //Componenti
 import PasswordInput from "../components/PasswordInput";
@@ -44,7 +44,7 @@ function Reset() {
                 return;
             }
 
-            const response = await axios.post('/user/cambia-password', { email, password }, { withCredentials: true});
+            const response = await cambiaPassword(email, password); //Usa la funzione esterna
 
             if (response.status === 200) {
                 toast.success("Password aggiornata con successo");
@@ -113,3 +113,4 @@ function Reset() {
 }
 
 export default Reset;
+
