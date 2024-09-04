@@ -6,7 +6,6 @@ import toast from 'react-hot-toast';
 import { useTimer } from 'use-timer';
 import axios from "../api_vespe/axiosConfig";
 
-
 const PopupOTP = ({ isVisible, onClose, email }) => {
     const [otp, setOtp] = useState('');
     const navigate = useNavigate();
@@ -30,19 +29,22 @@ const PopupOTP = ({ isVisible, onClose, email }) => {
         console.log("Tempo rimanente:", time);
     }, [status, time]);
 
+    const formatTime = (milliseconds) => {
+        const minutes = Math.floor(milliseconds / 60000);
+        const seconds = Math.floor((milliseconds % 60000) / 1000);
+        return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    };
+
     const handleChange = (newValue) => {
         setOtp(newValue);
     };
 
     const submitHandler = async () => {
         try {
-            const response = await axios.post('/user/verificaOTP', {otp, email},{
+            const response = await axios.post('/user/verificaOTP', { otp, email }, {
                 withCredentials: true
             });
-    
-            // Logga la risposta per vedere cosa viene effettivamente restituito
-            console.log('API Response:', response.data);
-    
+
             if (response.status === 200) {
                 toast.success("OTP verificato con successo.");
                 const loadingTime = 1500; // Ritardo di 1.5 secondi
@@ -51,21 +53,25 @@ const PopupOTP = ({ isVisible, onClose, email }) => {
                 }, loadingTime);
             }
         } catch (error) {
-            if(error.response) {
-                if(error.response.status === 400){
-                  const errorMessage = error.response.data.message;
-        
-                if(errorMessage === 'Utente non trovato'){
-                    toast.error("Utente non trovato.");
-                } else if (errorMessage === 'OTP non valido'){
-                    toast.error("OTP non valido.");
-                } else if (errorMessage === 'OTP scaduto'){
-                    toast.error("OTP scaduto.");
+            if (error.response) {
+                const errorMessage = error.response.data.message;
+
+                switch (errorMessage) {
+                    case 'Utente non trovato':
+                        toast.error("Utente non trovato.");
+                        break;
+                    case 'OTP non valido':
+                        toast.error("OTP non valido.");
+                        break;
+                    case 'OTP scaduto':
+                        toast.error("OTP scaduto.");
+                        break;
+                    default:
+                        toast.error("Errore durante l'accesso. Riprova più tardi.");
                 }
-                }else{
-                  toast.error("Errore durante l'accesso. Riprova più tardi.");
-                }
-              }
+            } else {
+                toast.error("Errore durante l'accesso. Riprova più tardi.");
+            }
         }
     };
 
@@ -91,10 +97,10 @@ const PopupOTP = ({ isVisible, onClose, email }) => {
                         <button id="submit-btn" className="btn btn-lg btn-primary" onClick={submitHandler}>Invia</button>
                     </div>
 
-                    {/* Formattazione del timer in minuti e secondi */}
+                    {/* Visualizzazione del timer in minuti e secondi */}
                     {status === 'RUNNING' && (
                         <div>
-                            <p>Codice OTP valido ancora per: {time}</p>
+                            <p>Codice OTP valido ancora per: {formatTime(time)}</p>
                         </div>
                     )}
                 </div>
@@ -104,3 +110,4 @@ const PopupOTP = ({ isVisible, onClose, email }) => {
 };
 
 export default PopupOTP;
+
