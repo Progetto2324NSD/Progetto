@@ -1,0 +1,61 @@
+import axios from "../api_vespe/axiosConfig";
+
+//Chiamata API per il reset della password
+export const resetPassword = async (email) => {
+    try {
+        const response = await axios.post('/user/reset-password', { email });
+        return response;
+    } catch (error) {
+        console.error("Errore durante il reset della password:", error);
+        throw error;  // Propaga l'errore affinché possa essere gestito dal chiamante
+    }
+};
+
+//Chiamata API per il login dell'utente
+export const loginUser = async (userData) => {
+    try {
+        const response = await axios.post('/user/login', userData, {
+            withCredentials: true
+        });
+        return response;
+    } catch (error) {
+        console.error("Errore durante l'accesso:", error);
+        throw error;  // Propaga l'errore affinché possa essere gestito dal chiamante
+    }
+};
+
+//Chiamata API per il controllo dell'OTP
+export const verifyOTP = async (otp, email) => {
+    try {
+        const response = await axios.post('/user/verificaOTP', { otp, email }, {
+            withCredentials: true
+        });
+        return response;
+    } catch (error) {
+        console.error("Errore durante la verifica dell'OTP:", error);
+        throw error;  // Propaga l'errore affinché possa essere gestito dal chiamante
+    }
+};
+
+//Chiamata API per la registrazione dell'utente
+export const registerUser = async (userData) => {
+    try {
+        const response = await axios.post('/user', userData, {
+            withCredentials: true
+        });
+        return response;
+    } catch (error) {
+        throw error;  // Propaga l'errore per essere gestito nel componente chiamante
+    }
+};
+
+//Chiamata API per il cambio della password
+export const cambiaPassword = async (email, password) => {
+    try {
+        const response = await axios.post('/user/cambia-password', { email, password }, { 
+            withCredentials: true });
+        return response;
+    } catch (error) {
+        throw error;  // Propaga l'errore per essere gestito nel componente chiamante
+    }
+};
