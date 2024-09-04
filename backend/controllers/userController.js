@@ -21,7 +21,7 @@ const jwt = require('jsonwebtoken');
 const nodemailer = require('nodemailer');
 const crypto = require('crypto');
 
-//richiamo il model User
+//Richiamo il Model User
 const User = require('../models/userModel');
 
 // @desc Salva utente
@@ -96,6 +96,7 @@ const loginUser = asyncHandler(async (req, res) => {
         const token = generateToken(user._id);
 
         // Imposta il cookie con il token
+        //CREARE UN COMMENTO UNICO PER IL COOKIE
         res.cookie('token', token, {
             httpOnly: true,    // Impedisce l'accesso al cookie tramite JavaScript lato client
             secure: process.env.NODE_ENV === 'production', // Imposta secure a true in produzione (richiede HTTPS)
@@ -131,7 +132,7 @@ const getData = asyncHandler (async (req, res,) => {
     res.json({ message: "Info utente stampati"});
 });
 
-// @desc Reset password
+// @desc Genera OTP
 // @route POST /user/reset-password
 // @access Public
 const generateOTP = (length = 4) => {
@@ -143,8 +144,10 @@ const generateOTP = (length = 4) => {
     return otp;
 };
 
-//Aggiungere DESCRIZIONE E CAMBIARE NOME ALL'API POICHè MOLTO CONTROVERSA CON L'API PER AGGIORNARE LA PASSWORD
+
+//Gestisce una richiesta HTTP per inviare un codice OTP a un utente tramite mail per il reset della password
 const mailOTP = asyncHandler(async (req, res) => {
+    //Estrae l'email dal corpo della richiesta
     const { email } = req.body;
 
     try {
@@ -176,24 +179,45 @@ const mailOTP = asyncHandler(async (req, res) => {
             },
         });
 
+        //Crea un'email con soggetto 'Reset della Password'
         const mailOptions = {
             from: process.env.SMTP_USER,
             to: user.email,
             subject: 'Reset della Password',
-            text: `Il tuo codice OTP per il reset della password è ${otp}.`,
+            html: `
+                <html>
+                    <body style="font-family: Arial, sans-serif; color: #333; background-color: #f9f9f9; margin: 0; padding: 20px;">
+                        <div style="max-width: 600px; margin: auto; background-color: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+                            <h2 style="color: #007bff;">Reset della Password</h2>
+                            <p style="font-size: 16px;">Ciao,</p>
+                            <p style="font-size: 16px;">Hai richiesto il reset della password per il tuo account.</p>
+                            <p style="font-size: 16px;">Il tuo codice OTP per il reset della password è:</p>
+                            <h3 style="background-color: #007bff; color: #fff; padding: 10px; text-align: center; border-radius: 4px;">${otp}</h3>
+                            <p style="font-size: 16px;">Per favore, inserisci questo codice nella pagina di reset della password.</p>
+                            <p style="font-size: 16px;">Se non hai richiesto questo reset, puoi ignorare questa email.</p>
+                            <p style="font-size: 16px;">Grazie,</p>
+                            <p style="font-size: 16px;">Il Team di Supporto</p>
+                        </div>
+                    </body>
+                </html>
+            `,
         };
-
+        
         // Invia l'email
         await transporter.sendMail(mailOptions);
 
         res.status(200).json({ message: 'Codice OTP inviato tramite email' });
+        //Se si verifica un errore durante il processo,cattura l'eccezione, la registra nel log 
+        //e restituisce una risposta con stato '500'
     } catch (error) {
         console.error('Errore durante l\'invio dell\'email:', error);
         res.status(500).json({ message: 'Errore durante l\'invio dell\'email', error: error.message });
     }
 });
 
-//Aggiungere DESCRIZIONE E VEDERE COME PROTEGGERE IL CAMBIO PASSWORD
+//VEDERE COME PROTEGGERE IL CAMBIO PASSWORD
+
+//Gestisce una richiesta HTTP per verificare un codice OTP inviato precedentemente all'utente
 const verificaOTP = asyncHandler(async (req, res) => {
     try {
         const { email, otp } = req.body;
@@ -204,19 +228,19 @@ const verificaOTP = asyncHandler(async (req, res) => {
         if (!user) {
             return res.status(400).json({ message: 'Utente non trovato' });
         }
-
+        //Confronta l'OTP fornito con quello memorizzato nel database
         const isMatch = await bcrypt.compare(otp, user.resetOtp);
         if (!isMatch) {
             return res.status(400).json({ message: 'OTP non valido' });
         }
-
+        //Controlla se l'OTP è scaduto confrontando il timestamp di scadenza con l'ora corrente
         if (user.resetOtpExpires < Date.now()) {
             otpFlag = false;
             return res.status(400).json({ message: 'OTP scaduto' });
         }
 
         if (user && isMatch && otpFlag) {
-
+            //Genera un token JWT per autenticare l'utente
             const token = generateToken(user._id);
 
             // Imposta il cookie con il token JWT
@@ -244,14 +268,14 @@ const verificaOTP = asyncHandler(async (req, res) => {
 
 // @desc Cambia password post verifica OTP
 // @route POST /user/cambia-password
-// @access Provate
+// @access Private
 const cambiaPassword = asyncHandler(async (req, res) => {
     try{
         const { email, password } = req.body;
 
         const user = await User.findOne({ email });
 
-        //password hasata 
+        //Password hashata 
         const salt = bcrypt.genSaltSync(10);
         const hash = bcrypt.hashSync(password, salt);
 
@@ -270,6 +294,8 @@ const cambiaPassword = asyncHandler(async (req, res) => {
 
 
 //Genero il tokenJWT per il login/registrazione e password dimenticata
+//Utilizza la libreria 'jwt' per firmare il token con una chiave segreta presa dalle variabili d'ambiente
+//Token che può essere usato per autenticare l'utente nelle richieste future
 const generateToken = (id) => {
     return jwt.sign({id}, process.env.JWT, {
         expiresIn: '1h'
