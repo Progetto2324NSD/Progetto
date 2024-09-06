@@ -1,51 +1,63 @@
 import React, { useState } from "react";
-import { Card, CardContent, Typography, TextField, Button, MenuItem, Box } from '@mui/material';
+import { Card, CardContent, Typography, Button, Box } from '@mui/material';
 import MapPopup from '../MapPopup';
+import toast from "react-hot-toast";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Form from 'react-bootstrap/Form';
+import { registerWorkout } from "../../service/workoutService";
 
 function WorkoutCard({ title }) {
-    const [trainingData, setTrainingData] = useState({
-        distance: '',
-        time: '',
-        type: '',
-        date: '',
-    });
+    const [distance, setDistance] = useState("");
+    const [time, setTime] = useState("");
+    const [type, setType] = useState("");
+    const [date, setDate] = useState("");
+    
+    const [startCoords, setStartCoords] = useState(null);
+    const [endCoords, setEndCoords] = useState(null);
+
     const [openMapPopup, setOpenMapPopup] = useState(false);
 
-    const trainingTypes = [
-        { value: 'easy', label: 'Easy Run' },
-        { value: 'interval', label: 'Interval Run' },
-        { value: 'long', label: 'Long Run' },
-        { value: 'tempo', label: 'Tempo Run' },
-    ];
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setTrainingData({
-            ...trainingData,
-            [name]: value,
-        });
-    };
-
-    const handleSubmit = (e) => {
+    const submitHandler = async (e) => {
         e.preventDefault();
-        console.log(trainingData);
-        // Add logic to handle form submission, such as sending to a server.
+
+        if (!distance || !time || !type || !date || !startCoords || !endCoords) {
+            toast.error("Compilare tutti i campi per registrare il workout");
+            return;
+        }
+
+        const workoutData = { 
+            distance, 
+            time, 
+            type,
+            date,
+            startCoords,
+            endCoords
+        };
+
+        try {
+            const response = await registerWorkout(workoutData);
+
+            if (response.status === 201) {
+                toast.success("Workout registrato con successo!");
+            }
+        } catch (error) {
+            toast.error("Errore durante la registrazione del workout.");
+        }
     };
 
     const handleOpenMapPopup = () => setOpenMapPopup(true);
     const handleCloseMapPopup = () => setOpenMapPopup(false);
-    const handleDistanceChange = (distance) => {
-        setTrainingData({
-            ...trainingData,
-            distance: distance.toFixed(2), // Set distance with two decimal places
-        });
+    
+    const handleDistanceChange = (distance, startCoords, endCoords) => {
+        setDistance(distance.toFixed(2)); // Imposta la distanza con due decimali
+        setStartCoords(startCoords);
+        setEndCoords(endCoords);
         handleCloseMapPopup();
     };
 
     return (
         <Card sx={{ 
             minWidth: 275, 
-            maxWidth: 400, 
             height: 'auto', 
             boxShadow: 3, 
             borderRadius: 2, 
@@ -57,10 +69,8 @@ function WorkoutCard({ title }) {
                     {title}
                 </Typography>
 
-                {/* Workout Registration Form */}
                 <Box
                     component="form"
-                    onSubmit={handleSubmit}
                     sx={{
                         display: 'flex',
                         flexDirection: 'column',
@@ -73,52 +83,48 @@ function WorkoutCard({ title }) {
                         fullWidth
                         onClick={handleOpenMapPopup}
                     >
-                        Distance (km): {trainingData.distance || 'Click to set'}
+                        Distanza (km): {distance || 'APRI LA MAPPA QUI'}
                     </Button>
 
-                    <TextField
-                        label="Time (min)"
-                        variant="outlined"
+                    <input
+                        type="number" 
+                        className="form-control form-control-lg bg-light fs-6" 
+                        placeholder="Tempo (min)"
                         name="time"
-                        value={trainingData.time}
-                        onChange={handleChange}
-                        type="number"
-                        fullWidth
+                        value={time}
+                        onChange={(e) => setTime(e.target.value)}
                         required
                     />
 
-                    <TextField
-                        select
-                        label="Training Type"
-                        variant="outlined"
-                        name="type"
-                        value={trainingData.type}
-                        onChange={handleChange}
-                        fullWidth
+                    <Form.Select 
+                        aria-label="Default select example"
+                        name="type" 
+                        value={type}
+                        onChange={(e) => setType(e.target.value)}
                         required
                     >
-                        {trainingTypes.map((option) => (
-                            <MenuItem key={option.value} value={option.value}>
-                                {option.label}
-                            </MenuItem>
-                        ))}
-                    </TextField>
+                        <option>Tipo Allenamento</option>
+                        <option value="Corsa Semplice">Corsa Semplice</option>
+                        <option value="Lungo">Lungo</option>
+                        <option value="Progressivo">Progressivo</option>
+                        <option value="Tempo Run">Tempo Run</option>
+                        <option value="Fartlek">Fartlek</option>
+                        <option value="Ripetute">Ripetute</option>
+                    </Form.Select>
 
-                    <TextField
-                        label="Date"
-                        variant="outlined"
+                    <input
+                        type="date" 
+                        className="form-control form-control-lg bg-light fs-6" 
+                        placeholder="Data"
                         name="date"
-                        value={trainingData.date}
-                        onChange={handleChange}
-                        type="date"
-                        fullWidth
+                        value={date}
+                        onChange={(e) => setDate(e.target.value)}
                         required
-                        InputLabelProps={{ shrink: true }}
                     />
 
-                    <Button type="submit" variant="contained" color="primary">
-                        Save Workout
-                    </Button>
+                    <button className="btn btn-lg btn-primary w-100 fs-6" onClick={submitHandler}>
+                        Salva Workout
+                    </button>
                 </Box>
             </CardContent>
 
