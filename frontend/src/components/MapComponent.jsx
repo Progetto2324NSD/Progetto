@@ -22,8 +22,8 @@ function MapComponent({ onDistanceChange }) {
     const map = new mapboxgl.Map({
       container: mapContainerRef.current,
       style: 'mapbox://styles/mapbox/streets-v11',
-      center: [12.4964, 41.9028], // Coordinate di Roma
-      zoom: 10,
+      center: [16.48473, 41.11743],
+      zoom: 12,
     });
 
     // Inizializzazione del controllo delle direzioni
@@ -35,11 +35,16 @@ function MapComponent({ onDistanceChange }) {
 
     map.addControl(directions, 'top-left');
 
-    // Calcola e imposta la distanza
+    // Calcola e imposta la distanza e le coordinate
     directions.on('route', (e) => {
       const route = e.route[0];
       const distanceInKm = route.distance / 1000; // Distanza in chilometri
-      onDistanceChange(distanceInKm);
+
+      // Passa anche le coordinate di inizio e fine
+      const startCoords = directions.getOrigin().geometry.coordinates;
+      const endCoords = directions.getDestination().geometry.coordinates;
+
+      onDistanceChange(distanceInKm, startCoords, endCoords);
     });
 
     // Pulizia della mappa quando il componente viene smontato
