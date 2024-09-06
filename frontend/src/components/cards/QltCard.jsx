@@ -8,7 +8,6 @@ function QltCard({ title, para }) {
             display: 'flex', 
             alignItems: 'center', 
             minWidth: 200,
-            maxWidth: 400,
             height: 115,
             boxShadow: 3, 
             borderRadius: 2 
