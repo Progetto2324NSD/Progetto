@@ -140,6 +140,14 @@ body {
   margin-bottom: 20px;
 }
 
+/* ----- Calendario ----- */
+.calendar-container {
+  background-color: white; /* Colore di sfondo solido */
+  padding: 10px; /* Spazio interno */
+  border-radius: 8px; /* Angoli arrotondati (opzionale) */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Leggera ombra per dare profondità */
+}
+
 /* ----- Mappa Dashboard -----*/
 .map-container {
   width: 100%;
@@ -148,19 +156,79 @@ body {
   overflow: hidden;    /* Impedisce che il contenuto esca dai bordi arrotondati */
 }
 
-/* ----- Grafici ----- */
-.graph-card {
-    border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    padding: 20px;
-    background-color: #fff;
-    text-align: center;
+/* ----- Card Benvenuto ----- */
+.styled-card {
+  display: flex !important;
+  align-items: center !important;
+  background-color: #0d6efd !important;
+  padding: 16px !important;
+  border-radius: 16px !important;
+  color: white !important;
+  position: relative !important; /* Necessario per posizionare l'immagine */
+  overflow: visible !important; /* Assicurati che l'immagine possa uscire dai bordi */
 }
 
-.pie-chart {
-    border-radius: 15px;
+.styled-avatar {
+  background-color: #fff !important;
+  color: #0d6efd !important;
+  margin-right: 16px !important;
+  width: 56px !important;
+  height: 56px !important;
 }
 
+.card-content {
+  flex: 1 !important; /* Permette al contenuto di occupare lo spazio rimanente */
+}
+
+.welcome-image {
+  width: 250px !important; /* Puoi regolare la dimensione come preferisci */
+  height: 200px !important; /* Puoi regolare la dimensione come preferisci */
+  position: absolute !important; /* Posiziona l'immagine in modo assoluto */
+  right: 0px !important; /* Sposta l'immagine fuori dalla card verso destra */
+  top: 50% !important; /* Centra verticalmente */
+  transform: translateY(-50%) !important; /* Centra verticalmente */
+  border-radius: 50% !important; /* Se desideri bordi arrotondati per l'immagine */
+  object-fit: cover !important; /* Mantiene le proporzioni e copre l'area */
+}
+
+/* ----- Bottoni/Card Statistiche ----- */
+.stat-card {
+  background-color: #0d6efd;
+  color: white;
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 10px;
+}
+
+.stat-card h5 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.stat-card .icon {
+  font-size: 2.5rem;
+}
+
+.stat-card .value {
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+.stat-card .description {
+  font-size: 0.9rem;
+}
+
+.stat-card .line-graph {
+  width: 100px;
+  height: 30px;
+
+  background-size: cover;
+}
+ 
 
 /*------------ For small screens ------------*/
 @media only screen and (max-width: 768px) {
@@ -181,6 +249,10 @@ body {
 
   .right-box {
     padding: 20px;
+  }
+
+  .welcome-image {
+    display: none;
   }
 }
 
