@@ -4,13 +4,17 @@ import 'boxicons';
 import MapComponent from './MapComponent';
 
 function MapPopup({ open, onClose, onDistanceChange }) {
+    const handleDistanceChange = (distance, startCoords, endCoords) => {
+        onDistanceChange(distance, startCoords, endCoords);
+    };
+
     return (
         <Modal
             open={open}
             onClose={onClose}
             closeAfterTransition
             BackdropProps={{
-                timeout: 500, // Durata dell'animazione della transizione
+                timeout: 500,
             }}
         >
             <Fade in={open}>
@@ -29,7 +33,6 @@ function MapPopup({ open, onClose, onDistanceChange }) {
                         outline: 'none',
                     }}
                 >
-                    {/* Close button */}
                     <IconButton
                         aria-label="close"
                         onClick={onClose}
@@ -43,14 +46,11 @@ function MapPopup({ open, onClose, onDistanceChange }) {
                         <box-icon name="x" color="grey"></box-icon>
                     </IconButton>
                     
-                    {/* Title */}
                     <Typography variant="h6" component="h2" gutterBottom>
                         Calcola il tuo percorso:
                     </Typography>
         
-                    {/* Map Component */}
-                    <MapComponent onDistanceChange={onDistanceChange} />
-
+                    <MapComponent onDistanceChange={handleDistanceChange} />
                 </Box>
             </Fade>
         </Modal>
