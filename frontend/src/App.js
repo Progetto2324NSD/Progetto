@@ -7,6 +7,8 @@ import Register from "./pages/Register";
 import Dashboard from './pages/Dashboard';
 import ForgotPassword from './pages/Forgot';
 import ResetPassword from './pages/Reset';
+import Workout from './pages/Workout';
+import Stat from './pages/Stat';
 
 function App() {
   return (
@@ -17,6 +19,8 @@ function App() {
         <Route path="/Dashboard" element={<Dashboard />} />
         <Route path="/ForgotPassword" element={<ForgotPassword />} />
         <Route path="/ResetPassword" element={<ResetPassword />} />
+        <Route path="/Workout" element={<Workout />} />
+        <Route path="/Statistiche" element={<Stat />} />
       </Routes>
     </Router>
   );
