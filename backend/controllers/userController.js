@@ -128,6 +128,8 @@ const getData = asyncHandler (async (req, res,) => {
         email,
         message: "Info utente stampati"
     });
+
+    res.json({ message: "Info utente stampati"});
 });
 
 // @desc Genera OTP
@@ -177,6 +179,7 @@ const mailOTP = asyncHandler(async (req, res) => {
             },
         });
 
+        //Crea un'email con soggetto 'Reset della Password'
         const mailOptions = {
             from: process.env.SMTP_USER,
             to: user.email,
@@ -212,6 +215,7 @@ const mailOTP = asyncHandler(async (req, res) => {
     }
 });
 
+//VEDERE COME PROTEGGERE IL CAMBIO PASSWORD
 
 //Gestisce una richiesta HTTP per verificare un codice OTP inviato precedentemente all'utente
 const verificaOTP = asyncHandler(async (req, res) => {
