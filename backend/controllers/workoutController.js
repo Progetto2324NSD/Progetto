@@ -94,10 +94,137 @@ const lastWorkout = asyncHandler(async (req, res) => {
   }
 });
 
+//API per ottenere le informazioni nelle card (PAGINA: statistiche)
+
+// @desc Tempo di allenamento nel giorno corrente
+// @route GET /workout/time-oggi
+// @access Private
+const timeDayWorkout = asyncHandler(async(req, res) => {
+
+  try{
+    const today = new Date();
+    const startDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const endDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+  
+    const workoutsToday = await Workout.find({
+      user: req.user._id,
+      date: {
+        $gte: startDay,
+        $lt: endDay
+      }
+    });
+  
+    const tempoTot = workoutsToday.reduce((acc, workout) => acc + workout.time, 0);
+  
+    res.status(200).json({ tempoTot });
+
+  }catch (error) {
+    res.status(400).json({ message: 'Errore'});
+  }
+
+});
+
+// @desc Distanza Percorsa nel giorno corrente
+// @route GET /workout/distance-oggi
+// @access Private
+const distanceDayWorkout = asyncHandler(async(req, res) => {
+
+  try{
+    const today = new Date();
+    const startDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const endDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+  
+    const workoutsToday = await Workout.find({
+      user: req.user._id,
+      date: {
+        $gte: startDay,
+        $lt: endDay
+      }
+    });
+  
+    const distTot = workoutsToday.reduce((acc, workout) => acc + workout.distance, 0);
+  
+    res.status(200).json({ distTot });
+
+  }catch (error) {
+    res.status(400).json({ message: 'Errore'});
+  }
+});
+
+// @desc Allenamenti svoli nel giorno corrente
+// @route GET /workout/num-oggi
+// @access Private
+const numDayWorkout = asyncHandler(async(req, res) => {
+  try{
+    const today = new Date();
+    const startDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const endDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+  
+    const workoutsToday = await Workout.countDocuments({
+      user: req.user._id,
+      date: {
+        $gte: startDay,
+        $lt: endDay
+      }
+    });
+  
+  
+    res.status(200).json({ workoutsToday });
+
+  }catch (error) {
+    res.status(400).json({ message: 'Errore'});
+  }
+});
+
+// @desc Velocità media allenamento nel giorno corrente
+// @route GET /workout/avg-oggi
+// @access Private
+const avgDayWorkout = asyncHandler(async(req, res) => {
+
+  try{
+    const today = new Date();
+    const startDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const endDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
+  
+    const workoutsToday = await Workout.find({
+      user: req.user._id,
+      date: {
+        $gte: startDay,
+        $lt: endDay
+      }
+    });
+  
+    const distTot = workoutsToday.reduce((acc, workout) => acc + workout.distance, 0);
+
+    const workoutsTime = await Workout.find({
+      user: req.user._id,
+      date: {
+        $gte: startDay,
+        $lt: endDay
+      }
+    });
+  
+    const tempoTot = workoutsTime.reduce((acc, workout) => acc + workout.time, 0);
+    //tempo in ore
+    const tempoH = tempoTot / 3600;
+  
+    const avg = distTot / tempoH;
+  
+    res.status(200).json({ avg });
+
+  }catch (error) {
+    res.status(400).json({ message: 'Errore'});
+  }
+
+});
 
 
 module.exports = {
     createWorkout,
     showWorkout,
-    lastWorkout
+    lastWorkout,
+    timeDayWorkout,
+    distanceDayWorkout,
+    numDayWorkout,
+    avgDayWorkout,
 };
