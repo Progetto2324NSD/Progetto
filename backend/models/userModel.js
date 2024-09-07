@@ -1,3 +1,4 @@
+//Crea una struttura per memorizzare e gestire i dati degli utenti in un database MongoDB
 const mongoose = require('mongoose');
 
 const userSchema = mongoose.Schema({
