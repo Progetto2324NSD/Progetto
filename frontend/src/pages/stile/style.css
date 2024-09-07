@@ -135,6 +135,65 @@ body {
   margin-bottom: 20px;
 }
 
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+ 
+.sidebar-header h2 {
+  margin-left: 10px;
+  font-size: 20px;
+  font-weight: bold;
+}
+ 
+.offcanvas-fixed {
+  max-height: 100vh; /* Fissa l'altezza dell'Offcanvas alla vista */
+  overflow: hidden; /* Nascondi l'overflow */
+}
+ 
+.menu-items {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+ 
+.menu-items .nav-link {
+  display: flex;
+  align-items: center;
+  margin: 15px 0;
+  padding: 10px;
+  color: #000;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 8px;
+}
+ 
+.menu-items .nav-link:hover {
+  background-color: #e0e0e0;
+}
+ 
+.menu-items .nav-link box-icon {
+  margin-right: 10px;
+  font-size: 20px;
+}
+ 
+.menu-items .nav-link span {
+  margin-left: 10px;
+}
+ 
+/* Flex-grow class for the spacer */
+.flex-grow-1 {
+  flex-grow: 1;
+}
+ 
+/* Stile per il link di Logout */
+.logout-link {
+  margin-top: auto; /* Spinge Logout alla fine */
+  padding-top: 20px; /* Separa Logout dalle altre voci */
+}
+
 /* ----- Col Row ----- */
 .row{
   margin-bottom: 20px;
@@ -193,15 +252,35 @@ body {
 
 /* ----- Bottoni/Card Statistiche ----- */
 .stat-card {
-  background-color: #0d6efd;
-  color: white;
+  background-color: white;  /* Colore di default: bianco */
+  color: #0d6efd;  /* Colore del testo e dell'icona di default */
   border-radius: 20px;
   padding: 20px;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  align-items: center;  /* Allinea verticalmente al centro */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   margin-bottom: 10px;
+  cursor: pointer;  /* Indica che è cliccabile */
+  transition: background-color 0.3s ease, color 0.3s ease;
+  position: relative;
+}
+
+.stat-card.clicked {
+  background-color: #0d6efd !important;  /* Colore attuale quando cliccato */
+  color: white !important;  /* Testo bianco quando cliccato */
+}
+
+.stat-card .icon {
+  font-size: 2.5rem !important;
+  margin-right: 20px;  /* Spazio tra l'icona e il testo */
+  transition: color 0.3s ease !important;  /* Transizione per cambiare colore dell'icona */
+}
+
+.stat-card .content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;  /* Allinea il contenuto al centro orizzontalmente */
+  text-align: center;  /* Allinea il testo al centro */
 }
 
 .stat-card h5 {
@@ -209,13 +288,10 @@ body {
   font-size: 1.2rem;
 }
 
-.stat-card .icon {
-  font-size: 2.5rem;
-}
-
 .stat-card .value {
   font-size: 1.8rem;
   font-weight: bold;
+  margin: 5px 0;  /* Spazio tra il valore e il titolo/descrizione */
 }
 
 .stat-card .description {
@@ -225,10 +301,11 @@ body {
 .stat-card .line-graph {
   width: 100px;
   height: 30px;
-
   background-size: cover;
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
 }
- 
 
 /*------------ For small screens ------------*/
 @media only screen and (max-width: 768px) {
