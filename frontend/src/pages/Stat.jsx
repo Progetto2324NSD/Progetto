@@ -5,8 +5,10 @@ import StatButton from "../components/StatButton";
 import './stile/style.css';
 
 //Icone MUI
-import DirectionsRunRoundedIcon from '@mui/icons-material/DirectionsRunRounded';
-import EditRoadRoundedIcon from '@mui/icons-material/EditRoadRounded';
+import TimerRoundedIcon from '@mui/icons-material/TimerRounded';
+import LocationOnRoundedIcon from '@mui/icons-material/LocationOnRounded';
+import FitnessCenterRoundedIcon from '@mui/icons-material/FitnessCenterRounded';
+import SpeedRoundedIcon from '@mui/icons-material/SpeedRounded';
 
 function Stat(){
     return(
@@ -19,28 +21,29 @@ function Stat(){
                     <Col md={4} xs={12}>
                         <h4>Output</h4>
                         <StatButton
-                            title="I tuoi percorsi"
-                            icon={<EditRoadRoundedIcon style={{ color: "white" }} fontSize="large" />}
-                            value="84 bpm"
-                            description=""
+                            title="Tempo Trascorso"
+                            icon={<TimerRoundedIcon  fontSize="large" />}
+                            value="24 min"
+                            description="Tempo allenamento di oggi"
+                            onClick={() => alert("Bottone cliccato")}
                         />
                         <StatButton
                             title="Distanza Percorsa"
-                            icon={<DirectionsRunRoundedIcon style={{ color: "white" }} fontSize="large" />}
+                            icon={<LocationOnRoundedIcon fontSize="large" />}
                             value="9800"
                             description="Distanza Percorsa oggi"
                         />
                         <StatButton
-                            title="Water"
-                            //icon={<OpacityIcon style={{ color: "white" }} fontSize="large" />}
-                            value="1.5 liters"
-                            description="Acqua consumata oggi"
+                            title="Allenamenti Svolti"
+                            icon={<FitnessCenterRoundedIcon  fontSize="large" />}
+                            value="4"
+                            description="Allenamenti svolti oggi"
                         />
                         <StatButton
-                            title="Sleep"
-                            //icon={<NightsStayIcon style={{ color: "white" }} fontSize="large" />}
-                            value="7 hours"
-                            description="Sonno della scorsa notte"
+                            title="Velocità media"
+                            icon={<SpeedRoundedIcon  fontSize="large" />}
+                            value="3.14km/h"
+                            description="Velocità media oggi"
                         />
                     </Col>
                     <Col md={8} xs={12}>
