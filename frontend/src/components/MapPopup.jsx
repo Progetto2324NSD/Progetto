@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal, Box, Typography, IconButton, Fade } from '@mui/material';
 import 'boxicons';
 import MapComponent from './MapComponent';
+import { blue } from '@mui/material/colors';
 
 function MapPopup({ open, onClose, onDistanceChange }) {
     const handleDistanceChange = (distance, startCoords, endCoords) => {
@@ -40,7 +41,7 @@ function MapPopup({ open, onClose, onDistanceChange }) {
                             position: 'absolute',
                             top: 8,
                             right: 8,
-                            color: 'grey.500',
+                            color: "grey.500",
                         }}
                     >
                         <box-icon name="x" color="grey"></box-icon>
