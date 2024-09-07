@@ -36,3 +36,16 @@ export const lastWorkout = async () => {
         throw error; // Gestione degli errori
     }
 };
+
+
+
+// Funzione per eliminare un allenamento
+export const deleteWorkout = async (id) => {
+    try {
+        const response = await axios.delete(`/workout/delete-workout${id}`);
+        return response.data; // Assicurati di gestire correttamente la risposta
+    } catch (error) {
+        console.error("Errore durante l'eliminazione dell'allenamento", error);
+        throw error; // Rilancia l'errore in modo che venga gestito nel componente
+    }
+};
