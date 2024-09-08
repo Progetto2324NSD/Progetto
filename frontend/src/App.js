@@ -9,6 +9,7 @@ import ForgotPassword from './pages/Forgot';
 import ResetPassword from './pages/Reset';
 import Workout from './pages/Workout';
 import Stat from './pages/Stat';
+import Notifiche from './pages/Notifiche';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
         <Route path="/ResetPassword" element={<ResetPassword />} />
         <Route path="/Workout" element={<Workout />} />
         <Route path="/Statistiche" element={<Stat />} />
+        <Route path="/Notifiche" element={<Notifiche />} />
       </Routes>
     </Router>
   );
