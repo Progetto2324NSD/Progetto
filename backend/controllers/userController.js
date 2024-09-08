@@ -145,7 +145,9 @@ const generateOTP = (length = 4) => {
 };
 
 
-//Gestisce una richiesta HTTP per inviare un codice OTP a un utente tramite mail per il reset della password
+//
+//
+//
 const mailOTP = asyncHandler(async (req, res) => {
     //Estrae l'email dal corpo della richiesta
     const { email } = req.body;
@@ -215,9 +217,10 @@ const mailOTP = asyncHandler(async (req, res) => {
     }
 });
 
-//VEDERE COME PROTEGGERE IL CAMBIO PASSWORD
 
-//Gestisce una richiesta HTTP per verificare un codice OTP inviato precedentemente all'utente
+//
+//
+//
 const verificaOTP = asyncHandler(async (req, res) => {
     try {
         const { email, otp } = req.body;
@@ -292,6 +295,25 @@ const cambiaPassword = asyncHandler(async (req, res) => {
     }
 });
 
+//BLACKLIST (CI VANNO I CATTIVI, CREDETE IN BABBO NATALE)
+const blacklist = [];
+
+//
+//
+//
+const logout = asyncHandler(async(req, res) => {
+
+        res.cookie('token', '', {
+            httpOnly: true,      // Assicurati che il cookie sia solo lato server per sicurezza
+            secure: process.env.NODE_ENV === 'production', // Usa "secure" solo in produzione
+            sameSite: 'strict',  // Evita attacchi CSRF
+            expires: new Date(0) // Imposta il cookie come scaduto
+        });
+
+        res.status(200).json({ message: 'Logout effettuato con successo' });
+
+});
+
 
 //Genero il tokenJWT per il login/registrazione e password dimenticata
 //Utilizza la libreria 'jwt' per firmare il token con una chiave segreta presa dalle variabili d'ambiente
@@ -309,4 +331,5 @@ module.exports = {
     mailOTP,
     verificaOTP,
     cambiaPassword,
+    logout
 }
