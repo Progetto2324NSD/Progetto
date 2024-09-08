@@ -1,8 +1,41 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardContent, Typography, Box } from '@mui/material';
 import { Gauge, gaugeClasses } from '@mui/x-charts/Gauge';
+import axios from '../../api_vespe/axiosConfig';
 
-function QltCard({ title, para }) {
+
+function QltCard({ title }) {
+
+    const [punteggio, setPunteggio ] = useState(0);
+    const [desc, setDesc ] = useState('');
+
+    useEffect(() => {
+        const fetchPunteggio = async () => {
+            try{
+                const response = await axios.get('/workout/allenamento', {
+                    withCredentials: true,
+                    heeaders: {
+                        'Accet': 'application/json'
+                    }
+                });
+
+                if (response.status === 200) {
+                    const { punteggio, desc } = response.data;
+
+                    setPunteggio(punteggio);
+                    setDesc(desc);
+                } else {
+                    console.error("Errore durante il recupero del punteggio");
+                }
+            }catch(error){
+                console.error("Errore durante il recupero del punteggio");
+            }
+        };
+
+        fetchPunteggio();
+
+    }, []);
+
     return (
         <Card sx={{ 
             display: 'flex', 
@@ -18,7 +51,6 @@ function QltCard({ title, para }) {
                 width: '100%' 
             }}>
 
-                {/* Box per il Gauge */}
                 <Box 
                     sx={{ 
                         flexShrink: 0, 
@@ -26,7 +58,7 @@ function QltCard({ title, para }) {
                     }}
                 >
                     <Gauge
-                        value={75}
+                        value={punteggio}
                         cornerRadius="50%"
                         sx={(theme) => ({
                             width: 100, 
@@ -35,7 +67,7 @@ function QltCard({ title, para }) {
                               fontSize: 15, 
                             },
                             [`& .${gaugeClasses.valueArc}`]: {
-                              fill: '#52b202',
+                              fill: '#0d6efd',
                             },
                             [`& .${gaugeClasses.referenceArc}`]: {
                               fill: theme.palette.text.disabled,
@@ -45,13 +77,12 @@ function QltCard({ title, para }) {
                     />
                 </Box>
 
-                {/* Box per il titolo e il paragrafo */}
                 <Box sx={{ marginLeft: 2 }}>
                     <Typography variant="h6" component="div">
                         {title}
                     </Typography>
                     <Typography variant="body2" color="text.secondary">
-                        {para}
+                        {desc}
                     </Typography>
                 </Box>
             </CardContent>
