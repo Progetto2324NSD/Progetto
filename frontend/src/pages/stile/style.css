@@ -148,8 +148,8 @@ body {
 }
  
 .offcanvas-fixed {
-  max-height: 100vh; /* Fissa l'altezza dell'Offcanvas alla vista */
-  overflow: hidden; /* Nascondi l'overflow */
+  max-height: 100vh; 
+  overflow: hidden; 
 }
  
 .menu-items {
@@ -164,16 +164,16 @@ body {
   margin: 15px 0;
   padding: 10px;
   color: #000;
-  text-decoration: none;
+  text-decoration: none; /* Rimuove la sottolineatura */
   font-size: 16px;
   font-weight: 500;
   border-radius: 8px;
 }
- 
+
 .menu-items .nav-link:hover {
   background-color: #e0e0e0;
 }
- 
+
 .menu-items .nav-link box-icon {
   margin-right: 10px;
   font-size: 20px;
@@ -198,6 +198,30 @@ body {
 .row{
   margin-bottom: 20px;
 }
+
+/* ----- Card Grafici ----- */
+.chart-card {
+  width: 100% !important; /* La card occuperà tutto lo spazio disponibile nella colonna Bootstrap */
+  border-radius: 24px !important; /* Bordi più arrotondati */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important; /* Leggera ombra */
+  background-color: white !important;
+  margin: 20px 0 !important; /* Spazio sopra e sotto */
+  padding: 10px !important;
+  display: flex !important;
+  min-height: 440px;
+  flex-direction: column !important;
+  align-items: center !important; /* Centra il contenuto orizzontalmente */
+  justify-content: center !important; /* Centra il contenuto verticalmente */
+  text-align: center !important; /* Allinea il testo al centro */
+}
+
+.header {
+  display: flex !important;
+  justify-content: center !important; /* Centra il contenuto orizzontalmente */
+  margin-bottom: 16px !important;
+  width: 100% !important;
+}
+
 
 /* ----- Calendario ----- */
 .calendar-container {
@@ -248,6 +272,19 @@ body {
   transform: translateY(-50%) !important; /* Centra verticalmente */
   border-radius: 50% !important; /* Se desideri bordi arrotondati per l'immagine */
   object-fit: cover !important; /* Mantiene le proporzioni e copre l'area */
+}
+/* ----- Memo Card ----- */
+.memo-card {
+  display: flex !important;
+  align-items: center !important;
+  background-color: white !important; /* Sfondo bianco */
+  padding: 16px !important;
+  border-radius: 16px !important;
+  color: #0d6efd !important; /* Testo blu per contrastare lo sfondo bianco */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Leggera ombra per un effetto di profondità */
+  flex-grow: 1 !important;  /* Permette alla card di crescere per riempire lo spazio */
+  max-height: 115px !important; /* Larghezza minima (modificabile) */
+  height: auto !important; /* Altezza dinamica in base al contenuto */
 }
 
 /* ----- Bottoni/Card Statistiche ----- */
