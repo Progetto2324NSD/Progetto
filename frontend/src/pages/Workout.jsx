@@ -1,51 +1,59 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Button, Spinner, Alert } from "react-bootstrap";
+import { Container, Row, Col, Button, Alert } from "react-bootstrap";
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { Card, CardContent, Typography } from '@mui/material';
-import dayjs from 'dayjs';
+import { Card, CardContent, Typography, Box } from '@mui/material';
 import Navbar from "../components/NavbarLogo";
-import { showWorkout, deleteWorkout} from "../service/workoutService";
+import { showWorkout } from "../service/workoutService";
 import './stile/style.css';
+import toast, { Toaster } from 'react-hot-toast';
+import axios from '../api_vespe/axiosConfig';
+import dayjs from 'dayjs';
+import BnvCard from '../components/cards/BnvCard';
+import run from '../utils/images/run.png';
+import CardMemo from '../components/cards/CardMemo';
+import workoutImage from '../utils/images/cardWorkImg.jpg';
 
 function Workout() {
     const [workouts, setWorkouts] = useState([]);
-    const [selectedDate, setSelectedDate] = useState(dayjs().format('YYYY-MM-DD'));
-    const [loading, setLoading] = useState(false);
-    const [deleteLoading, setDeleteLoading] = useState(null); // State for handling delete loading
+    const [selectedDate, setSelectedDate] = useState(null);  // selectedDate inizialmente impostato a null
     const [error, setError] = useState(null);
 
-    // Fetch workouts when selectedDate changes
     useEffect(() => {
         const fetchWorkouts = async () => {
-            setLoading(true);
-            setError(null);
+            if (!selectedDate) return;  // Se nessuna data è selezionata, non fare nulla
+
+            const loadingToast = toast.loading("Caricamento degli allenamenti...");
+
             try {
                 const data = await showWorkout(selectedDate);
-                setWorkouts(data);
+                setTimeout(() => {
+                    setWorkouts(data);
+                    toast.dismiss(loadingToast);
+                }, 1000);
             } catch (error) {
-                console.error("Errore durante il recupero degli allenamenti", error);
-                setError("Errore durante il recupero degli allenamenti.");
-            } finally {
-                setLoading(false);
+                toast.error("Errore durante il recupero degli allenamenti.");
+                toast.dismiss(loadingToast);
             }
         };
+
         fetchWorkouts();
     }, [selectedDate]);
 
-    const handleDeleteWorkout = async (id) => {
+    const handleSubmit = async (id) => {
         const confirmDelete = window.confirm("Sei sicuro di voler eliminare questo allenamento?");
         if (confirmDelete) {
-            setDeleteLoading(id); // Set the id of the workout being deleted
             try {
-                await deleteWorkout(id);
-                setWorkouts(workouts.filter(workout => workout._id !== id)); // Update state after deleting
+                await axios.delete(`/workout/delete-workout/${id}`, {
+                    withCredentials: true,
+                });
+
+                setWorkouts(workouts.filter(workout => workout._id !== id));
+                toast.success('Workout eliminato con successo!');
             } catch (error) {
-                console.error("Errore durante l'eliminazione dell'allenamento", error);
-                setError("Errore durante l'eliminazione dell'allenamento."); // Mostra il messaggio di errore
-            } finally {
-                setDeleteLoading(null); // Reset the delete loading state
+                console.error("Errore durante l'eliminazione del workout", error);
+                toast.error("Errore durante l'eliminazione del workout.");
             }
         }
     };
@@ -56,75 +64,92 @@ function Workout() {
             <Container>
                 <h2>Workout</h2><hr />
                 <Row>
+                    <Col md={8} xs={12}>
+                        <BnvCard para={'Seleziona una data per visualizzare e/o eliminare un workout!'} img={run}/>
+                    </Col>
+                    <Col md={4} xs={12}>
+                        <CardMemo /> 
+                    </Col>
+                </Row>
+                <Row>
                     <Col md={4} xs={12}>
                         <div className="calendar-container">
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DateCalendar
-                                    defaultValue={dayjs()}
-                                    onChange={(newDate) => setSelectedDate(newDate.format('YYYY-MM-DD'))}
+                                    value={selectedDate ? dayjs(selectedDate) : null} 
+                                    onChange={(newDate) => setSelectedDate(newDate ? newDate.format('YYYY-MM-DD') : null)}
                                 />
                             </LocalizationProvider>
                         </div>
                     </Col>
                     <Col md={8} xs={12}>
-                        {loading ? (
-                            <Spinner animation="border" role="status">
-                                <span className="sr-only">Caricamento...</span>
-                            </Spinner>
-                        ) : error ? (
-                            <Alert variant="danger">{error}</Alert>
-                        ) : workouts.length > 0 ? (
+                        {error && <Alert variant="danger">{error}</Alert>}
+                        {selectedDate && workouts.length > 0 ? (
                             <Row>
-                                {workouts.map((workout) => (
+                                {workouts.map((workout, index) => (
                                     <Col md={6} key={workout._id} className="mb-4">
-                                        <Card sx={{ minWidth: 275, boxShadow: 3 }}>
+                                        <Card sx={{ 
+                                            minWidth: 275, 
+                                            boxShadow: 3, 
+                                            borderRadius: 2,  // Bordo arrotondato
+                                            display: 'flex', 
+                                            flexDirection: 'column', 
+                                            alignItems: 'center'  // Centrare gli elementi
+                                        }}>
                                             <CardContent>
-                                                <Typography variant="h6" component="div" gutterBottom>
-                                                    Tipo: {workout.type}
-                                                </Typography>
-                                                <Typography variant="body2" color="text.secondary">
-                                                    Distanza: {workout.distance} km
-                                                </Typography>
-                                                <Typography variant="body2" color="text.secondary">
-                                                    Tempo: {workout.time} min
-                                                </Typography>
-                                                <Typography variant="body2" color="text.secondary">
-                                                    Data: {new Date(workout.date).toLocaleDateString()}
-                                                </Typography>
+                                                <Row>
+                                                    <Typography variant="h6" component="div" gutterBottom sx={{ fontWeight: 'bold', mb: 2 }}>
+                                                                Allenamento #{index + 1} {/* Titolo con numero progressivo */}
+                                                    </Typography>
+                                                    <Col>
+
+                                                        <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 'bold' }}>
+                                                            Tipo: {workout.type}
+                                                        </Typography>
+                                                        <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 'bold' }}>
+                                                            Distanza: {workout.distance} km
+                                                        </Typography>
+                                                        <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 'bold' }}>
+                                                            Tempo: {workout.time} min
+                                                        </Typography>
+                                                        <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 'bold' }}>
+                                                            Data: {new Date(workout.date).toLocaleDateString()}
+                                                        </Typography>
+                                                    </Col>
+                                                    <Col>
+                                                        <img src={workoutImage} alt="Workout" style={{ width: '100px', height: 'auto', alignItems: 'center' }} />
+                                                    </Col>
+                                                </Row>
                                             </CardContent>
-                                            <Button
-                                                variant="danger"
-                                                onClick={() => handleDeleteWorkout(workout._id)}
-                                                className="m-3"
-                                                disabled={deleteLoading === workout._id} // Disable if currently deleting
-                                            >
-                                                {deleteLoading === workout._id ? (
-                                                    <Spinner
-                                                        as="span"
-                                                        animation="border"
-                                                        size="sm"
-                                                        role="status"
-                                                        aria-hidden="true"
-                                                    />
-                                                ) : (
-                                                    "Elimina"
-                                                )}
-                                            </Button>
+                                            <Box sx={{ mb: 2 }}> {/* Margine inferiore per separare il bottone */}
+                                                <Button
+                                                    variant="danger"
+                                                    onClick={() => handleSubmit(workout._id)}
+                                                >
+                                                    Elimina
+                                                </Button>
+                                            </Box>
                                         </Card>
                                     </Col>
                                 ))}
                             </Row>
                         ) : (
-                            <Typography variant="h6" color="text.secondary">
-                                Nessun allenamento trovato per la data selezionata.
-                            </Typography>
+                            selectedDate ? (
+                                <Typography variant="h6" color="text.secondary">
+                                    Nessun allenamento trovato per la data selezionata.
+                                </Typography>
+                            ) : (
+                                <Typography variant="h6" color="text.secondary">
+                                    Seleziona una data per visualizzare gli allenamenti.
+                                </Typography>
+                            )
                         )}
                     </Col>
                 </Row>
             </Container>
+            <Toaster />
         </>
     );
 }
 
 export default Workout;
-
