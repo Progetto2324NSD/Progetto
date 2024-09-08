@@ -1,8 +1,8 @@
 import React from 'react';
 import { Card, CardContent, Typography, Box } from '@mui/material';
-import MapComponent from '../LastWorkoutMap'; // Assicurati che il percorso sia corretto
+import LastWorkoutMap from '../LastWorkoutMap'; // Assicurati che il percorso sia corretto
 
-function MapCard({ title, para, onDistanceChange }) {
+function MapCard({ title, para, distance, type, date, time, onDistanceChange, onTypeChange, onDateChange, onTimeChange }) {
   return (
     <Card sx={{ minWidth: 275, maxWidth: 840, boxShadow: 3, borderRadius: 2, height: 535 }}>
       <CardContent>
@@ -13,7 +13,12 @@ function MapCard({ title, para, onDistanceChange }) {
           {para}
         </Typography>
         <Box sx={{ height: '400px', width: '100%', borderRadius: '8px', overflow: 'hidden' }}>
-          <MapComponent onDistanceChange={onDistanceChange} />
+          <LastWorkoutMap 
+            onDistanceChange={onDistanceChange} 
+            onTimeChange={onTimeChange}
+            onTypeChange={onTypeChange}
+            onDateChange={onDateChange}
+          />
         </Box>
       </CardContent>
     </Card>
