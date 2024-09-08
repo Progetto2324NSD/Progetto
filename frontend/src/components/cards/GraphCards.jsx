@@ -5,11 +5,10 @@ function GraphCards({ title, para, children }) {
     return (
         <Card sx={{ 
             minWidth: 275, 
-            maxWidth: 400,  // Imposta una larghezza massima per la card
-            height: '100%', // Altezza al 100% del contenitore
+            height: '100%', 
             boxShadow: 3, 
             borderRadius: 2, 
-            overflow: 'hidden'  // Nascondi contenuti che escono dai bordi
+            overflow: 'hidden' 
         }}>
             <CardContent>
                 <Typography variant="h5" component="div">
