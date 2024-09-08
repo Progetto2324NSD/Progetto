@@ -5,46 +5,58 @@ import axios from '../api_vespe/axiosConfig';
 
 const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoibmljYWEiLCJhIjoiY20wbDdpNGFpMDJmeDJqczN0c3dycDJuMiJ9.Pu-Yepy-zww4R7_wiPiNBQ';
 
-const LastWorkoutMap = () => {
+const LastWorkoutMap = ({ onDistanceChange, onTimeChange, onTypeChange, onDateChange }) => {
   const mapContainerRef = useRef(null);
   const mapRef = useRef(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
   const [startCoords, setStartCoords] = useState(null);
   const [endCoords, setEndCoords] = useState(null);
+  const [distance, setDistance] = useState(null);
+  const [type, setType] = useState(null);
+  const [time, setTime] = useState(null);
+  const [date, setDate] = useState(null);
+
   const [styleLoaded, setStyleLoaded] = useState(false);
 
   useEffect(() => {
-    // Configura l'access token di Mapbox
     mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN;
 
-    // Inizializza la mappa
     mapRef.current = new mapboxgl.Map({
       container: mapContainerRef.current,
       style: 'mapbox://styles/mapbox/streets-v12',
-      center: [0, 0], // Posizione iniziale neutra
+      center: [0, 0],
       zoom: 14,
     });
 
-    // Aggiungi il controllo di navigazione (zoom, rotazione)
     mapRef.current.addControl(new mapboxgl.NavigationControl());
 
-    // Aggiungi un listener per l'evento style.load
     mapRef.current.on('style.load', () => {
       console.log('Stile della mappa caricato.');
       setStyleLoaded(true);
     });
 
-    // Funzione per ottenere i dati dell'ultimo workout
     const fetchLastWorkout = async () => {
       try {
         const response = await axios.get('/workout/last-workout', {
           withCredentials: true,
         });
 
-        const { startCoords, endCoords } = response.data;
+        const { startCoords, endCoords, distance, type, time, date } = response.data;
+
         setStartCoords(startCoords);
         setEndCoords(endCoords);
+        setDistance(distance);
+        setType(type);
+        setTime(time);
+        setDate(date);
+        
+        if (onDistanceChange) onDistanceChange(distance);
+        if (onTimeChange) onTimeChange(time);
+        if (onTypeChange) onTypeChange(type);
+        if (onDateChange) onDateChange(date);
+
       } catch (err) {
         console.error("Errore durante il recupero dell'ultimo workout:", err);
         setError(err.message);
@@ -53,23 +65,19 @@ const LastWorkoutMap = () => {
       }
     };
 
-    // Recupera le coordinate dell'ultimo workout
     fetchLastWorkout();
 
-    // Pulizia della mappa quando il componente viene smontato
     return () => {
       if (mapRef.current) {
         mapRef.current.remove();
       }
     };
-  }, []);
+  }, [onDistanceChange, onTimeChange, onTypeChange, onDateChange]);
 
   useEffect(() => {
-    // Controlla che sia lo stile che le coordinate siano disponibili
     if (styleLoaded && startCoords && endCoords) {
       console.log('Stile e coordinate pronte, calcolo del percorso...');
 
-      // Funzione per fare la chiamata all'API Directions e ottenere il percorso
       const getRoute = async (start, end) => {
         const url = `https://api.mapbox.com/directions/v5/mapbox/walking/${start[0]},${start[1]};${end[0]},${end[1]}?geometries=geojson&access_token=${MAPBOX_ACCESS_TOKEN}`;
 
@@ -80,7 +88,6 @@ const LastWorkoutMap = () => {
           if (route) {
             console.log('Percorso ottenuto:', route);
 
-            // Aggiungi la sorgente per il percorso evidenziato
             if (mapRef.current.getSource('highlight-route')) {
               mapRef.current.getSource('highlight-route').setData({
                 type: 'Feature',
@@ -118,11 +125,10 @@ const LastWorkoutMap = () => {
               });
             }
 
-            // Usa fitBounds per centrare e adattare la mappa ai confini del percorso
             const bounds = new mapboxgl.LngLatBounds();
             route.forEach(coord => bounds.extend(coord));
             mapRef.current.fitBounds(bounds, {
-              padding: 50,  // Aggiungi del padding per evitare che il percorso tocchi i bordi della mappa
+              padding: 50,
             });
           } else {
             console.error("Nessun percorso trovato nella risposta dell'API.");
@@ -133,7 +139,6 @@ const LastWorkoutMap = () => {
         }
       };
 
-      // Chiama la funzione per ottenere il percorso tra Punto A e Punto B
       getRoute(startCoords, endCoords);
     }
   }, [styleLoaded, startCoords, endCoords]);
