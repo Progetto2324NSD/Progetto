@@ -18,7 +18,6 @@ function MapComponent({ onDistanceChange }) {
 
     mapboxgl.accessToken = MAPBOX_ACCESS_TOKEN;
 
-    // Inizializzazione della mappa
     const map = new mapboxgl.Map({
       container: mapContainerRef.current,
       style: 'mapbox://styles/mapbox/streets-v11',
@@ -26,41 +25,31 @@ function MapComponent({ onDistanceChange }) {
       zoom: 12,
     });
 
-    // Inizializzazione del controllo delle direzioni
     const directions = new MapboxDirections({
       accessToken: mapboxgl.accessToken,
       unit: 'metric',
-      profile: 'mapbox/walking', // Imposta la modalità camminata
+      profile: 'mapbox/walking',
     });
 
     map.addControl(directions, 'top-left');
 
-    // Calcola e imposta la distanza e le coordinate
     directions.on('route', (e) => {
       const route = e.route[0];
-      const distanceInKm = route.distance / 1000; // Distanza in chilometri
+      const distanceInKm = route.distance / 1000;
 
-      // Passa anche le coordinate di inizio e fine
       const startCoords = directions.getOrigin().geometry.coordinates;
       const endCoords = directions.getDestination().geometry.coordinates;
 
       onDistanceChange(distanceInKm, startCoords, endCoords);
     });
 
-    // Pulizia della mappa quando il componente viene smontato
     return () => map.remove();
   }, [onDistanceChange]);
 
   return (
-    <div
-      ref={mapContainerRef}
-      style={{
-        height: '100%',
-        width: '100%',
-        borderRadius: '8px',
-        overflow: 'hidden',
-      }}
-    />
+    <div className="map-container-wrapper">
+      <div className="map-container" ref={mapContainerRef} />
+    </div>
   );
 }
 
