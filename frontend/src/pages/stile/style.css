@@ -131,56 +131,48 @@ body {
 }
 
 /*----- Navbar ----- */
-.navbar {
-  margin-bottom: 20px;
-}
-
-.sidebar-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 20px;
-}
- 
-.sidebar-header h2 {
-  margin-left: 10px;
-  font-size: 20px;
-  font-weight: bold;
-}
- 
-.offcanvas-fixed {
-  max-height: 100vh; 
-  overflow: hidden; 
-}
- 
-.menu-items {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
- 
 .menu-items .nav-link {
   display: flex;
   align-items: center;
   margin: 15px 0;
   padding: 10px;
-  color: #000;
+  color: #000; /* Colore del testo predefinito */
   text-decoration: none; /* Rimuove la sottolineatura */
   font-size: 16px;
   font-weight: 500;
   border-radius: 8px;
+  transition: background-color 0.3s, color 0.3s; /* Aggiunge transizione per il colore e lo sfondo */
 }
 
 .menu-items .nav-link:hover {
-  background-color: #e0e0e0;
+  background-color: #0d6efd; /* Colore di sfondo blu */
+  color: #fff; /* Colore del testo bianco */
 }
 
 .menu-items .nav-link box-icon {
   margin-right: 10px;
   font-size: 20px;
+  fill: currentColor; /* Assicura che il colore dell'icona segua il colore del testo */
+  color: inherit; /* Colore delle icone eredita dal contenitore */
 }
- 
+
+.menu-items .nav-link:hover box-icon {
+  fill: #fff !important; /* Colore delle icone bianco per l'hover */
+  color: #fff !important; /* Colore delle icone bianco per l'hover */
+}
+
 .menu-items .nav-link span {
   margin-left: 10px;
+}
+
+/* Rimuove la sottolineatura dai link all'interno di Nav.Link */
+.menu-items .nav-link a {
+  text-decoration: none;
+  color: inherit; /* Assicura che il colore del link erediti quello del contenitore */
+}
+
+.menu-items .nav-link a:hover {
+  color: inherit; /* Assicura che il colore del link non cambi quando viene hoverato */
 }
  
 /* Flex-grow class for the spacer */
@@ -232,11 +224,26 @@ body {
 }
 
 /* ----- Mappa Dashboard -----*/
-.map-container {
+.map-container-wrapper {
+  position: relative;
   width: 100%;
-  height: 500px;
-  border-radius: 15px; /* Arrotonda i bordi */
-  overflow: hidden;    /* Impedisce che il contenuto esca dai bordi arrotondati */
+  height: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+}
+
+.map-container {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 75%; /* Questo fa sì che la mappa mantenga un aspetto a 4:3 */
+  border-radius: 15px;
+  overflow: hidden;
+  background-color: #f0f0f0; /* Sfondo di fallback durante il caricamento della mappa */
+}
+
+.mapboxgl-map {
+  border-radius: 15px; /* Arrotonda i bordi della mappa */
 }
 
 /* ----- Card Benvenuto ----- */
@@ -300,6 +307,10 @@ body {
   cursor: pointer;  /* Indica che è cliccabile */
   transition: background-color 0.3s ease, color 0.3s ease;
   position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
 }
 
 .stat-card.clicked {
@@ -368,5 +379,21 @@ body {
   .welcome-image {
     display: none;
   }
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.sidebar-header img {
+  margin-right: 10px;
+}
+
+.sidebar-header h2 {
+  font-size: 20px;
+  font-weight: bold;
+  margin: 0; /* Rimuove il margine predefinito */
 }
 
