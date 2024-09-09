@@ -185,4 +185,3 @@ const StatChart = ({ selectedButton, data }) => {
   };
   
   export default StatChart;
-  
