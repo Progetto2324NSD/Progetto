@@ -295,9 +295,6 @@ const cambiaPassword = asyncHandler(async (req, res) => {
     }
 });
 
-//BLACKLIST (CI VANNO I CATTIVI, CREDETE IN BABBO NATALE)
-const blacklist = [];
-
 //
 //
 //

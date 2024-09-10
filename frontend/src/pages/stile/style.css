@@ -191,6 +191,33 @@ body {
   margin-bottom: 20px;
 }
 
+/* ----- Notifiche -----*/
+.notification-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 8px;
+  margin-bottom: 10px;
+}
+
+.notification-content {
+  flex: 1;
+}
+
+.notification-title {
+  font-weight: bold;
+  color: #007bff;
+  margin-bottom: 5px;
+}
+
+.notification-delete {
+  color: red;
+  font-size: 20px;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
 /* ----- Card Grafici ----- */
 .chart-card {
   width: 100% !important; /* La card occuperà tutto lo spazio disponibile nella colonna Bootstrap */

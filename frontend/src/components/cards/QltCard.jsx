@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Card, CardContent, Typography, Box } from '@mui/material';
 import { Gauge, gaugeClasses } from '@mui/x-charts/Gauge';
-import axios from '../../api_vespe/axiosConfig';
-
+import workoutService from '../../service/userService';
+import { calcolaPunteggio } from "../../service/workoutService";
 
 function QltCard({ title }) {
 
@@ -12,12 +12,8 @@ function QltCard({ title }) {
     useEffect(() => {
         const fetchPunteggio = async () => {
             try{
-                const response = await axios.get('/workout/allenamento', {
-                    withCredentials: true,
-                    heeaders: {
-                        'Accet': 'application/json'
-                    }
-                });
+                
+                const response = await calcolaPunteggio();
 
                 if (response.status === 200) {
                     const { punteggio, desc } = response.data;

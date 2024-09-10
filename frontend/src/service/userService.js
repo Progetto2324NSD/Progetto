@@ -59,3 +59,47 @@ export const cambiaPassword = async (email, password) => {
         throw error;  // Propaga l'errore per essere gestito nel componente chiamante
     }
 };
+
+//Chiamata API per la creazione dell'utente
+export const createUser = async (name, email, password) => {
+    try {
+        const response = await axios.post('/user/', { name, email, password}, { 
+            withCredentials: true });
+        return response;
+    } catch (error) {
+        throw error;  // Propaga l'errore per essere gestito nel componente chiamante
+    }
+};
+
+//Chiamata API per richiedere la data
+export const getData = async (_id, name, email) => {
+    try {
+        const response = await axios.get('/user/data', {_id, name, email}, { 
+            withCredentials: true });
+        return response;
+    } catch (error) {
+        throw error;  // Propaga l'errore per essere gestito nel componente chiamante
+    }
+};
+
+//Chiamata API per l'invio della mail dell'OTP
+export const mailOTP = async(email) => {
+    try {
+        const response = await axios.post('/user/reset-password', { email}, { 
+            withCredentials: true });
+        return response;
+    } catch (error) {
+        throw error;  // Propaga l'errore per essere gestito nel componente chiamante
+    }
+};
+
+//Funzione per effettuare il logout
+export const logout = async() => {
+    try {
+        const response = await axios.delete('/user/logout', { 
+            withCredentials: true });
+        return response;
+    } catch (error) {
+        throw error;  // Propaga l'errore per essere gestito nel componente chiamante
+    }
+};

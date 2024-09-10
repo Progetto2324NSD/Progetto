@@ -30,8 +30,10 @@ app.use(express.urlencoded({ extended: false }));
 // Includi le route
 app.use('/user', require('./routes/userRoutes'));
 app.use('/workout', require('./routes/workoutRoutes'));
+app.use('/notifiche', require('./routes/notiRoutes'));
 
 // Middleware di gestione degli errori
 app.use(errorHandler);
 
+console.log('Ciao a tutti belli e brutti');
 app.listen(port, () => console.log(`Il server è in ascolto sulla porta ${port}`));

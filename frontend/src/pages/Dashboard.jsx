@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Navbar from "../components/NavbarLogo";
 import { Container, Row, Col } from "react-bootstrap";
 import welcome from '../utils/images/welcome.png';

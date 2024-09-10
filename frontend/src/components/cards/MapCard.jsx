@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardContent, Typography, Box } from '@mui/material';
 import LastWorkoutMap from '../LastWorkoutMap'; // Assicurati che il percorso sia corretto
 
-function MapCard({ title, para, distance, type, date, time, onDistanceChange, onTypeChange, onDateChange, onTimeChange }) {
+function MapCard({ title, para, onDistanceChange, onTypeChange, onDateChange, onTimeChange }) {
   return (
     <Card sx={{ minWidth: 275, maxWidth: 840, boxShadow: 3, borderRadius: 2, height: 535 }}>
       <CardContent>

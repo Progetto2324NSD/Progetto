@@ -3,7 +3,6 @@ import Navbar from "../components/NavbarLogo";
 import { Container, Row, Col } from "react-bootstrap";
 import StatButton from "../components/StatButton";
 import './stile/style.css';
-import StatChart from "../components/StatChart";
 import axios from '../api_vespe/axiosConfig';
 import BnvCard from '../components/cards/BnvCard';
 import stat from '../utils/images/stat.png';
