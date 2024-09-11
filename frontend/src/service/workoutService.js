@@ -1,4 +1,4 @@
-import axios from "../api_vespe/axiosConfig";
+import axios from '../api_vespe/axiosConfig';
 
 //Chiamata API per la registrazione del workout
 export const registerWorkout = async (workoutData) => {
@@ -31,7 +31,8 @@ export const lastWorkout = async () => {
         const response = await axios.get('/workout/last-workout', {
             withCredentials: true
         });
-        return response.data; // Restituisce solo i dati dell'API
+
+        return response; // Restituisce solo i dati dell'API
     } catch (error) {
         throw error; // Gestione degli errori
     }

@@ -3,7 +3,6 @@ import Navbar from "../components/NavbarLogo";
 import { Container, Row, Col } from "react-bootstrap";
 import StatButton from "../components/StatButton";
 import './stile/style.css';
-import axios from '../api_vespe/axiosConfig';
 import BnvCard from '../components/cards/BnvCard';
 import stat from '../utils/images/stat.png';
 
@@ -13,6 +12,7 @@ import LocationOnRoundedIcon from '@mui/icons-material/LocationOnRounded';
 import FitnessCenterRoundedIcon from '@mui/icons-material/FitnessCenterRounded';
 import SpeedRoundedIcon from '@mui/icons-material/SpeedRounded';
 import ChartCard from "../components/cards/ChartCard";
+import { avgDayWorkout, distanceDayWorkout, numDayWorkout, timeDayWorkout } from "../service/workoutService";
 
 
 function Stat() {
@@ -44,26 +44,18 @@ function Stat() {
         const fetchData = async() => {
             try{
 
-                const tempo = await axios.get('/workout/time-oggi',{
-                    withCredentials: true
-                });
-                setTempoTot(tempo.data.tempoTot);
+              const response = await timeDayWorkout();
+                setTempoTot(response.data.tempoTot);
 
-                const dist = await axios.get('/workout/distance-oggi',{
-                    withCredentials: true
-                });
-                setDistTot(dist.data.distTot);
+                const response1 = await distanceDayWorkout();
+                setDistTot(response1.data.distTot);
 
-                const num = await axios.get('/workout/num-oggi',{
-                    withCredentials: true
-                });
-                setNumTot(num.data.workoutsToday);
+                const response2 = await numDayWorkout();
+                setNumTot(response2.data.workoutsToday);
 
 
-                const avg = await axios.get('/workout/avg-oggi',{
-                    withCredentials: true
-                });
-                setAvgTot(avg.data.avg);
+                const response3 = await avgDayWorkout();
+                setAvgTot(response3.data.avg);
 
 
             }catch(error){

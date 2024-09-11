@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import { lastWorkout } from '../service/workoutService';
 import axios from '../api_vespe/axiosConfig';
 
 const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoibmljYWEiLCJhIjoiY20wbDdpNGFpMDJmeDJqczN0c3dycDJuMiJ9.Pu-Yepy-zww4R7_wiPiNBQ';
@@ -39,10 +40,7 @@ const LastWorkoutMap = ({ onDistanceChange, onTimeChange, onTypeChange, onDateCh
 
     const fetchLastWorkout = async () => {
       try {
-        const response = await axios.get('/workout/last-workout', {
-          withCredentials: true,
-        });
-
+        const response = await lastWorkout();
         const { startCoords, endCoords, distance, type, time, date } = response.data;
 
         setStartCoords(startCoords);

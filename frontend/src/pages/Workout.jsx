@@ -5,10 +5,9 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { Card, CardContent, Typography, Box } from '@mui/material';
 import Navbar from "../components/NavbarLogo";
-import { showWorkout } from "../service/workoutService";
+import { deleteWorkout, showWorkout } from "../service/workoutService";
 import './stile/style.css';
 import toast, { Toaster } from 'react-hot-toast';
-import axios from '../api_vespe/axiosConfig';
 import dayjs from 'dayjs';
 import BnvCard from '../components/cards/BnvCard';
 import run from '../utils/images/run.png';
@@ -45,10 +44,7 @@ function Workout() {
         const confirmDelete = window.confirm("Sei sicuro di voler eliminare questo allenamento?");
         if (confirmDelete) {
             try {
-                await axios.delete(`/workout/delete-workout/${id}`, {
-                    withCredentials: true,
-                });
-
+                const response = await deleteWorkout();
                 setWorkouts(workouts.filter(workout => workout._id !== id));
                 toast.success('Workout eliminato con successo!');
             } catch (error) {

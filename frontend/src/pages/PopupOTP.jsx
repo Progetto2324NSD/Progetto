@@ -4,7 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import { MuiOtpInput } from 'mui-one-time-password-input';
 import toast from 'react-hot-toast';
 import { useTimer } from 'use-timer';
-import axios from "../api_vespe/axiosConfig";
+import { verifyOTP } from '../service/userService';
+
 
 const PopupOTP = ({ isVisible, onClose, email }) => {
     const [otp, setOtp] = useState('');
@@ -41,9 +42,7 @@ const PopupOTP = ({ isVisible, onClose, email }) => {
 
     const submitHandler = async () => {
         try {
-            const response = await axios.post('/user/verificaOTP', { otp, email }, {
-                withCredentials: true
-            });
+            const response = await verifyOTP();
 
             if (response.status === 200) {
                 toast.success("OTP verificato con successo.");

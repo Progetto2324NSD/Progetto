@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
 import '../../pages/stile/style.css';
 import 'boxicons/css/boxicons.min.css';
-import axios from '../../api_vespe/axiosConfig';
+import { getData } from "../../service/userService";
 import { useState, useEffect } from 'react';
 
 function BnvCard({ para, img }) {
@@ -15,12 +15,7 @@ function BnvCard({ para, img }) {
     useEffect(() => {
         const fetchUserData = async () => {
             try {
-                const response = await axios.get('/user/data', {
-                    withCredentials: true,
-                    headers: {
-                        'Accept': 'application/json'
-                    }
-                });
+                const response = await getData();
 
                 if (response.status === 200) {
                     setName(response.data.name);

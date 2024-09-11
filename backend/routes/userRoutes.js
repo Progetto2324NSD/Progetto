@@ -28,6 +28,6 @@ router.post('/verificaOTP', verificaOTP);
 router.post('/cambia-password', protect, cambiaPassword);
 
 //Route per il LOGOUT
-router.delete('/logout', logout);
+router.post('/logout', logout);
 
 module.exports = router;

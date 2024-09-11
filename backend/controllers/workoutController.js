@@ -491,7 +491,7 @@ const graficoTempo = asyncHandler(async (req, res) => {
     });
 
     // Trasforma l'oggetto in un array ordinato per mese
-    const monthlyData = Object.keys(monthlyWorkoutTime).sort().map(month => ({
+    const monthlyData = allMonths.map(month => ({
       month,
       totalTime: monthlyWorkoutTime[month] || 0  // Imposta a 0 se null o undefined
     }));

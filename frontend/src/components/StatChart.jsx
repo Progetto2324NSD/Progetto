@@ -1,10 +1,10 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import axios from "../api_vespe/axiosConfig";
 import toast from 'react-hot-toast';
 
 import { PieChart } from '@mui/x-charts/PieChart';
 import { BarChart } from '@mui/x-charts/BarChart';
+import { graficoDistanza, graficoAllenamenti, graficoTempo, graficoVelocita } from "../service/workoutService";
 
 const StatChart = ({ selectedButton, data }) => {
 
@@ -18,17 +18,14 @@ const StatChart = ({ selectedButton, data }) => {
     const fetchData1 = async () => {
 
       try{
-        const response = await axios.get('/workout/tipo-allenamenti', {
-          withCredentials: true
-        });
-
+        const response = await graficoAllenamenti();
         const datiGrafico1 = [
-          {id: 0, value: response.data.corsaSemplice, label: 'Corsa Semplice'},
-          {id: 1, value: response.data.fartlek, label: 'Fartlek'},
-          {id: 2, value: response.data.lungo, label: 'Lungo'},
-          {id: 3, value: response.data.progressivo, label: 'Progressivo'},
-          {id: 4, value: response.data.tempoRun, label: 'Tempo Run'},
-          {id: 5, value: response.data.ripetute, label: 'Ripetute'},
+          {id: 0, value: response.data.corsaSemplice, label: 'Semplice', color: '#0d6efd'},
+          {id: 1, value: response.data.fartlek, label: 'Fartlek', color: '#1a7dff'},
+          {id: 2, value: response.data.lungo, label: 'Lungo', color: '#3389ff'},
+          {id: 3, value: response.data.progressivo, label: 'Progressivo', color: '#66a3ff'},
+          {id: 4, value: response.data.tempoRun, label: 'Tempo Run', color: '#99b3ff'},
+          {id: 5, value: response.data.ripetute, label: 'Ripetute', color: '#c2dfff'},
         ];
 
         setDataG(datiGrafico1);
@@ -47,9 +44,7 @@ const StatChart = ({ selectedButton, data }) => {
       const fetchData2 = async () => {
   
         try{
-          const response = await axios.get('/workout/distanza-allenamenti', {
-            withCredentials: true
-          });
+          const response = await graficoDistanza();
   
         const datiGrafico = {
           labels: response.data.map(item => item.month), // Mesi come etichette
@@ -71,9 +66,7 @@ const StatChart = ({ selectedButton, data }) => {
     const fetchData3 = async () => {
 
       try{
-        const response = await axios.get('/workout/tempo-allenamenti', {
-          withCredentials: true
-        });
+        const response = await graficoTempo();
 
       const datiGrafico = {
         labels: response.data.map(item => item.month), // Mesi come etichette
@@ -93,9 +86,7 @@ const StatChart = ({ selectedButton, data }) => {
   useEffect(() => {
     const fetchData4 = async () => {
       try {
-        const response = await axios.get('/workout/velocita-allenamenti', {
-          withCredentials: true
-        });
+        const response = await graficoVelocita();
 
         const datiGrafico4 = {
           dataset: [
@@ -123,15 +114,15 @@ const StatChart = ({ selectedButton, data }) => {
         case 'tempo':
           return (                      
             <BarChart
-            zAxis={[{ data: dataT.labels}]}
+            zAxis={[{ data: dataT.labels }]}
             series={[
               {
                 data: dataT.values,
                 label: 'Tempo totale (min)'
               }
             ]}
-            width={400}
-            height={200}
+            width={500}
+            height={300}
             />
           );
         case 'distanza':
@@ -150,15 +141,17 @@ const StatChart = ({ selectedButton, data }) => {
           );
         case 'allenamenti':
           return (
-            <PieChart
-              series={[
-                {
-                  data: dataG,
-                }
-              ]}
-              width={400}
-              height={200}
-            />
+            <div className='centroGrafici'>
+              <PieChart
+                series={[
+                  {
+                    data: dataG,
+                  }
+                ]}
+                width={500}
+                height={300}
+              />
+            </div>
           );
         case 'velocita':
           return (

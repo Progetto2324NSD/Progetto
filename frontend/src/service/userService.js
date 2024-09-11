@@ -72,9 +72,9 @@ export const createUser = async (name, email, password) => {
 };
 
 //Chiamata API per richiedere la data
-export const getData = async (_id, name, email) => {
+export const getData = async () => {
     try {
-        const response = await axios.get('/user/data', {_id, name, email}, { 
+        const response = await axios.get('/user/data', { 
             withCredentials: true });
         return response;
     } catch (error) {
@@ -96,7 +96,7 @@ export const mailOTP = async(email) => {
 //Funzione per effettuare il logout
 export const logout = async() => {
     try {
-        const response = await axios.delete('/user/logout', { 
+       const response = await axios.post('/user/logout', {},  { 
             withCredentials: true });
         return response;
     } catch (error) {
