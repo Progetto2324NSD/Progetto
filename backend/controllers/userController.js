@@ -119,7 +119,7 @@ const loginUser = asyncHandler(async (req, res) => {
 // @route GET /user/auth
 // @access Private
 const verificaAuth = asyncHandler(async(req, res) => {
-    res.status(200).json(req.user)
+    res.status(200).json(req.user);
 })
  
 

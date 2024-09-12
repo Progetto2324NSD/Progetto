@@ -10,6 +10,7 @@ import ResetPassword from './pages/Reset';
 import Workout from './pages/Workout';
 import Stat from './pages/Stat';
 import Notifiche from './pages/Notifiche';
+import ProtectedRoutes from './utils/ProtectedRoutes';
 
 function App() {
   return (
@@ -17,12 +18,17 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/Register" element={<Register />} />
-        <Route path="/Dashboard" element={<Dashboard />} />
         <Route path="/ForgotPassword" element={<ForgotPassword />} />
-        <Route path="/ResetPassword" element={<ResetPassword />} />
-        <Route path="/Workout" element={<Workout />} />
-        <Route path="/Statistiche" element={<Stat />} />
-        <Route path="/Notifiche" element={<Notifiche />} />
+
+        <Route element={<ProtectedRoutes />}>
+          <Route path="/Dashboard" element={<Dashboard />} />
+          <Route path="/Workout" element={<Workout />} />
+          <Route path="/Statistiche" element={<Stat />} />
+          <Route path="/Notifiche" element={<Notifiche />} />
+          <Route path="/ResetPassword" element={<ResetPassword />} />
+        </Route>
+
+
       </Routes>
     </Router>
   );
