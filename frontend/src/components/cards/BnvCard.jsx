@@ -31,7 +31,7 @@ function BnvCard({ para, img }) {
 
 
     return (
-        <Card className="styled-card">
+        <Card className={`styled-card spaced-card`}>
             <Avatar className="styled-avatar">
                 <i className='bx bx-dumbbell'></i>
             </Avatar>

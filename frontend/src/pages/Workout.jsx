@@ -69,7 +69,7 @@ function Workout() {
                 </Row>
                 <Row>
                     <Col md={4} xs={12}>
-                        <div className="calendar-container">
+                        <div className="calendar-container spaced-card">
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DateCalendar
                                     value={selectedDate ? dayjs(selectedDate) : null} 

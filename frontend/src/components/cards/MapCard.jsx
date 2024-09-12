@@ -4,7 +4,7 @@ import LastWorkoutMap from '../LastWorkoutMap'; // Assicurati che il percorso si
 
 function MapCard({ title, para, onDistanceChange, onTypeChange, onDateChange, onTimeChange }) {
   return (
-    <Card sx={{ minWidth: 275, maxWidth: 840, boxShadow: 3, borderRadius: 2, height: 535 }}>
+    <Card className="spaced-card" sx={{ minWidth: 275, maxWidth: 840, boxShadow: 3, borderRadius: 2, height: 535 }}>
       <CardContent>
         <Typography variant="h5" component="div" gutterBottom>
           {title}

@@ -3,32 +3,33 @@ import "../pages/stile/style.css";
 import { useNavigate } from 'react-router-dom';
 import { MuiOtpInput } from 'mui-one-time-password-input';
 import toast from 'react-hot-toast';
-import { useTimer } from 'use-timer';
-import { verifyOTP } from '../service/userService';
-
-
+import { verificaOTP } from '../service/userService';
+ 
+ 
 const PopupOTP = ({ isVisible, onClose, email }) => {
     const [otp, setOtp] = useState('');
+    const [timeRemaining, setTimeRemaining] = useState(300000); // 5 minuti in millisecondi
     const navigate = useNavigate();
 
-    const { time, start, reset, status } = useTimer({
-        initialTime: 300000, // 5 minuti in millisecondi
-        timerType: 'DECREMENTAL',
-        autostart: false // Avvio manuale
-    });
-
     useEffect(() => {
+        let timer;
         if (isVisible) {
-            start();
+            timer = setInterval(() => {
+                setTimeRemaining(prevTime => {
+                    if (prevTime <= 0) {
+                        clearInterval(timer);
+                        return 0;
+                    }
+                    return prevTime - 1000; // Decrementa di 1 secondo
+                });
+            }, 1000);
         } else {
-            reset();
+            clearInterval(timer);
+            setTimeRemaining(300000); // Reset del tempo
         }
-    }, [isVisible, start, reset]);
 
-    useEffect(() => {
-        console.log("Stato timer:", status);
-        console.log("Tempo rimanente:", time);
-    }, [status, time]);
+        return () => clearInterval(timer); // Pulisce l'intervallo al dismount
+    }, [isVisible]);
 
     const formatTime = (milliseconds) => {
         const minutes = Math.floor(milliseconds / 60000);
@@ -37,16 +38,17 @@ const PopupOTP = ({ isVisible, onClose, email }) => {
     };
 
     const handleChange = (newValue) => {
+        console.log('Nuovo valore OTP:', newValue);
         setOtp(newValue);
     };
-
+ 
     const submitHandler = async () => {
         try {
-            const response = await verifyOTP();
+            const response = await verificaOTP(otp, email);
 
             if (response.status === 200) {
                 toast.success("OTP verificato con successo.");
-                const loadingTime = 1500; // Ritardo di 1.5 secondi
+                const loadingTime = 1500;
                 setTimeout(() => {
                     navigate('/ResetPassword', { state: { email } });
                 }, loadingTime);
@@ -93,13 +95,13 @@ const PopupOTP = ({ isVisible, onClose, email }) => {
                         />
                     </div>
                     <div>
-                        <button id="submit-btn" className="btn btn-lg btn-primary" onClick={submitHandler}>Invia</button>
+                       <button id="submit-btn" className="btn btn-lg btn-primary" onClick={submitHandler}>Invia</button>
                     </div>
 
                     {/* Visualizzazione del timer in minuti e secondi */}
-                    {status === 'RUNNING' && (
-                        <div>
-                            <p>Codice OTP valido ancora per: {formatTime(time)}</p>
+                    {timeRemaining > 0 && (
+                        <div className="otp-timer">
+                            <p>Codice OTP valido ancora per: {formatTime(timeRemaining)}</p>
                         </div>
                     )}
                 </div>

@@ -114,7 +114,15 @@ const loginUser = asyncHandler(async (req, res) => {
         res.status(401).json({ message: 'Email o password non validi' });
     }
 });
+
+// @desc Verifico la risposta del middleware protect
+// @route GET /user/auth
+// @access Private
+const verificaAuth = asyncHandler(async(req, res) => {
+    res.status(200).json(req.user)
+})
  
+
 // @desc Dati Utente
 // @route GET /user/data
 // @access Public
@@ -333,5 +341,6 @@ module.exports = {
     mailOTP,
     verificaOTP,
     cambiaPassword,
-    logout
+    logout,
+    verificaAuth
 }

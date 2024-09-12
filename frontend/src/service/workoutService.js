@@ -123,7 +123,7 @@ export const graficoAllenamenti = async() => {
 };
 
 //Chiamata API per indicare il grafico del tempo di workout mese x mese workoudei tipi dts
-export const graficoTempo = async() => {
+export const graficoTempo = async(type) => {
     try {
         const response = await axios.get('/workout/tempo-allenamenti', {
             withCredentials: true

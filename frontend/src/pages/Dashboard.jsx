@@ -61,7 +61,7 @@ function Dashboard() {
 
                     </Col>
                     <Col md={4} xs={12}>
-                        <QltCard title="Qualità workout mensile" para="Continua così.." /><br />
+                        <QltCard title="Qualità workout mensile" para="Continua così.."/><br />
                         <Workout title="Workout"/>
                     </Col>
                 </Row>

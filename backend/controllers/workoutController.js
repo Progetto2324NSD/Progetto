@@ -294,7 +294,7 @@ const graficoAllenamenti = asyncHandler(async (req, res) => {
 
 });
 
-// @desc Grafico dei tipi di workouts
+// @desc Grafico dei tempi di ciascun tipo di workouts
 // @route GET /workout/grafico-allenamenti
 // @access Private
 const graficoDistanza = asyncHandler(async (req, res) => {
@@ -434,76 +434,32 @@ const graficoVelocita = asyncHandler(async (req, res) => {
 // @access Private
 const graficoTempo = asyncHandler(async (req, res) => {
   try {
-    // Trova tutti gli allenamenti dell'utente
-    const workouts = await Workout.find({
-      user: req.user._id
-    });
+    // Ottieni l'anno corrente
+    const currentYear = new Date().getFullYear();
 
-    // Se non ci sono allenamenti, restituisci un array vuoto
-    if (workouts.length === 0) {
-      return res.status(200).json([]);
-    }
-
-    // Funzione per ottenere un array di mesi tra due date
-    const getMonthsInRange = (startDate, endDate) => {
-      const months = [];
-      const date = new Date(startDate);
-
-      // Loop per generare tutti i mesi tra startDate e endDate
-      while (date <= endDate) {
-        const monthYear = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
-        months.push(monthYear);
-        date.setMonth(date.getMonth() + 1);
-      }
-
-      return months;
-    };
-
-    // Trova la data più vecchia e la più recente degli allenamenti
-    const firstWorkout = new Date(Math.min(...workouts.map(w => new Date(w.date).getTime())));
-    const lastWorkout = new Date();
-
-    // Genera l'elenco di mesi dall'inizio degli allenamenti fino ad oggi
-    const allMonths = getMonthsInRange(firstWorkout, lastWorkout);
-
-    // Oggetto per raggruppare il tempo totale di allenamento per mese
-    const monthlyWorkoutTime = {};
-
-    // Inizializza ogni mese con 0 tempo di allenamento
-    allMonths.forEach(month => {
-      monthlyWorkoutTime[month] = 0;
-    });
-
-    // Somma il tempo di allenamento per ciascun mese
-    workouts.forEach(workout => {
-      const workoutDate = new Date(workout.date);
-      const monthYear = `${workoutDate.getFullYear()}-${(workoutDate.getMonth() + 1).toString().padStart(2, '0')}`;
-
-      // Verifica che il mese esista
-      if (monthlyWorkoutTime[monthYear] !== undefined) {
-        // Aggiungi il tempo dell'allenamento
-        if (typeof workout.time === 'number' && !isNaN(workout.time)) {
-          monthlyWorkoutTime[monthYear] += workout.time;
-        } else {
-          console.warn(`Invalid time for workout: ${workout.time}`);
+    // Aggrega i dati per tipo di allenamento e somma i tempi
+    const data = await Workout.aggregate([
+      { $match: { date: { $gte: new Date(currentYear, 0, 1), $lt: new Date(currentYear + 1, 0, 1) } } }, // Filtra per anno corrente
+      {
+        $group: {
+          _id: '$type', // Raggruppa per tipo di allenamento
+          totalTime: { $sum: '$time' } // Somma i tempi
         }
       }
-    });
+    ]);
 
-    // Trasforma l'oggetto in un array ordinato per mese
-    const monthlyData = allMonths.map(month => ({
-      month,
-      totalTime: monthlyWorkoutTime[month] || 0  // Imposta a 0 se null o undefined
+    // Prepara i dati per il grafico a torta
+    const formattedData = data.map((item, index) => ({
+      id: index, // Usa un id unico per ciascun tipo di allenamento
+      value: item.totalTime,
+      label: item._id,
+      color: ['#0d6efd', '#1a7dff', '#3389ff', '#66a3ff', '#99b3ff', '#c2dfff'][index % 6] // Colori ciclici per i tipi di allenamento
     }));
 
-    console.log('Monthly Data:', monthlyData); // Debugging output
-
-    // Rispondi con i dati mese per mese
-    res.status(200).json(monthlyData);
-
+    res.json(formattedData); // Restituisce i dati formattati
   } catch (error) {
-    console.error('Errore:', error); // Debugging output
-    res.status(400).json({ message: 'Errore nel calcolo del tempo di allenamento per mese', error });
+    console.error(error);
+    res.status(500).json({ message: 'Errore nel recupero dei dati' });
   }
 });
 

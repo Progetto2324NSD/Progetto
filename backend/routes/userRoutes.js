@@ -12,7 +12,7 @@ const express = require('express');
 const router = express.Router();
 
 //Richiamo il Controller
-const { createUser, loginUser, getData, mailOTP, verificaOTP, cambiaPassword, logout } = require("../controllers/userController");
+const { createUser, loginUser, getData, mailOTP, verificaOTP, cambiaPassword, logout, verificaAuth } = require("../controllers/userController");
 
 //"Proteggo" la chiamata dell'API getData tramite Middleware
 const { protect } = require("../middlewares/authMiddleware");
@@ -21,6 +21,9 @@ const { protect } = require("../middlewares/authMiddleware");
 router.post('/', createUser);
 router.post('/login', loginUser);
 router.get('/data', protect, getData);
+
+//Utilizzo della API per le ProtectedRoute
+router.get('/auth', protect, verificaAuth);
 
 //Utilizzo API reset Password (UTENTE) Prima API verificata, da verificare la seconda
 router.post('/reset-password', mailOTP);

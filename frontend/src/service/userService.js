@@ -25,7 +25,7 @@ export const loginUser = async (userData) => {
 };
 
 //Chiamata API per il controllo dell'OTP
-export const verifyOTP = async (otp, email) => {
+export const verificaOTP = async (otp, email) => {
     try {
         const response = await axios.post('/user/verificaOTP', { otp, email }, {
             withCredentials: true

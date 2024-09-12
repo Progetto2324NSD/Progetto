@@ -386,30 +386,37 @@ body {
  
 /*------------ For small screens ------------*/
 @media only screen and (max-width: 768px) {
-.box-area {
+  .box-area {
     margin: 0 10px;
+    margin-bottom: 20px; /* Aggiungi uno spazio uniforme tra le card */
   }
- 
+
   .left-box {
-    height: auto; /* Allow the height to adjust based on content */
-    padding: 20px; /* Add some padding for better spacing */
-    text-align: center; /* Center the text and image */
+    height: auto; /* Permette all'altezza di adattarsi al contenuto */
+    padding: 20px; /* Aggiunge un po' di padding per migliorare la spaziatura */
+    text-align: center; /* Centra il testo e l'immagine */
   }
+  
   .featured-image img {
-    width: 100%; /* Make the image take the full width of its container */
-    max-width: 250px; /* Ensure the image doesn't get too large */
-    height: auto; /* Maintain the aspect ratio */
+    width: 100%; /* L'immagine prende tutta la larghezza del contenitore */
+    max-width: 250px; /* Garantisce che l'immagine non diventi troppo grande */
+    height: auto; /* Mantiene il rapporto d'aspetto */
   }
- 
+
   .right-box {
     padding: 20px;
   }
- 
+
   .welcome-image {
     display: none;
+  }  
+
+  .spaced-card {
+    margin-bottom: 24px; /* Regola questo valore secondo le tue necessità */
   }
 }
- 
+
+
 .sidebar-header {
   display: flex;
   align-items: center;
@@ -425,5 +432,8 @@ body {
   font-weight: bold;
   margin: 0; /* Rimuove il margine predefinito */
 }
+
+
  
+
  

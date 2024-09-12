@@ -3,11 +3,13 @@ import mapboxgl from 'mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import MapboxDirections from '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions';
 import '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css';
+import { useMediaQuery } from 'react-responsive';
 
 // Assicurati di avere un token di Mapbox in una variabile d'ambiente
 const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoibmljYWEiLCJhIjoiY20wbTY5NzR1MGJ0OTJpcjcxNndocXJoNyJ9.NI9wTx2IIx2qJ_vNaBhNmg';
 
 function MapComponent({ onDistanceChange }) {
+  const isMobile = useMediaQuery({ query: '(max-width: 768px)' });
   const mapContainerRef = useRef(null);
 
   useEffect(() => {
@@ -22,7 +24,7 @@ function MapComponent({ onDistanceChange }) {
       container: mapContainerRef.current,
       style: 'mapbox://styles/mapbox/streets-v11',
       center: [16.48473, 41.11743],
-      zoom: 12,
+      zoom: 13,
     });
 
     const directions = new MapboxDirections({
@@ -46,9 +48,15 @@ function MapComponent({ onDistanceChange }) {
     return () => map.remove();
   }, [onDistanceChange]);
 
+  const mapContainerStyle = {
+    width: '100%',
+    height: isMobile ? '600px' : '400px', // Altezza maggiore per dispositivi mobili
+    position: 'relative',
+  };
+
   return (
-    <div className="map-container-wrapper">
-      <div className="map-container" ref={mapContainerRef} />
+    <div className="map-container-wrapper" style={{ width: '100%' }}>
+      <div className="map-container" ref={mapContainerRef} style={mapContainerStyle} />
     </div>
   );
 }
