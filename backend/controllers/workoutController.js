@@ -299,76 +299,48 @@ const graficoAllenamenti = asyncHandler(async (req, res) => {
 // @access Private
 const graficoDistanza = asyncHandler(async (req, res) => {
   try {
-    // Trova tutti gli allenamenti dell'utente
-    const workouts = await Workout.find({
-      user: req.user._id
-    });
-
-    // Se non ci sono allenamenti, restituisci un array vuoto
-    if (workouts.length === 0) {
-      return res.status(200).json([]);
-    }
-
-    // Funzione per ottenere un array di mesi tra due date
-    const getMonthsInRange = (startDate, endDate) => {
-      const months = [];
-      const date = new Date(startDate);
-
-      // Loop per generare tutti i mesi tra startDate e endDate
-      while (date <= endDate) {
-        const monthYear = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
-        months.push(monthYear);
-        date.setMonth(date.getMonth() + 1);
-      }
-
-      return months;
-    };
-
-    // Trova la data più vecchia e la più recente degli allenamenti
-    const firstWorkout = new Date(Math.min(...workouts.map(w => new Date(w.date).getTime())));
-    const lastWorkout = new Date();
-
-    // Genera l'elenco di mesi dall'inizio degli allenamenti fino ad oggi
-    const allMonths = getMonthsInRange(firstWorkout, lastWorkout);
-
-    // Oggetto per raggruppare la distanza totale per mese
-    const monthlyDistance = {};
-
-    // Inizializza ogni mese con 0 distanza
-    allMonths.forEach(month => {
-      monthlyDistance[month] = 0;
-    });
-
-    // Somma la distanza percorsa per ciascun mese
-    workouts.forEach(workout => {
-      const workoutDate = new Date(workout.date);
-      const monthYear = `${workoutDate.getFullYear()}-${(workoutDate.getMonth() + 1).toString().padStart(2, '0')}`;
-
-      // Verifica che il mese esista
-      if (monthlyDistance[monthYear] !== undefined) {
-        // Aggiungi la distanza dell'allenamento
-        if (typeof workout.distance === 'number' && workout.distance >= 0) {
-          monthlyDistance[monthYear] += workout.distance;
-        } else {
-          console.warn(`Invalid distance for workout: ${workout.distance}`);
+    const currentYear = new Date().getFullYear();
+    
+    // Aggregazione dei dati per mese
+    const data = await Workout.aggregate([
+      {
+        $match: {
+          date: {
+            $gte: new Date(`${currentYear}-01-01`), // Inizio dell'anno corrente
+            $lt: new Date(`${currentYear + 1}-01-01`) // Inizio dell'anno successivo
+          }
+        }
+      },
+      {
+        $group: {
+          _id: { 
+            year: { $year: "$date" }, 
+            month: { $month: "$date" }
+          },
+          distanzaTotale: { $sum: "$distance" }
+        }
+      },
+      {
+        $sort: { "_id.month": 1 } // Ordinamento per mese
+      },
+      {
+        $project: {
+          _id: 0,
+          mese: "$_id.month",
+          distanza: { $ifNull: ["$distanzaTotale", 0] } // Imposta la distanza a 0 se non ci sono dati
         }
       }
+    ]);
+
+    // Creazione di un array con tutti i mesi e le distanze, senza etichetta del mese
+    const result = Array.from({ length: 12 }, (_, i) => {
+      const meseData = data.find(d => d.mese === (i + 1)) || { mese: i + 1, distanza: 0 };
+      return meseData.distanza;
     });
 
-    // Trasforma l'oggetto in un array ordinato per mese
-    const monthlyData = Object.keys(monthlyDistance).sort().map(month => ({
-      month,
-      totalDistance: monthlyDistance[month] || 0  // Imposta a 0 se null o undefined
-    }));
-
-    console.log('Monthly Distance Data:', monthlyData); // Debugging output
-
-    // Rispondi con i dati
-    res.status(200).json(monthlyData);
-
+    res.json(result);
   } catch (error) {
-    console.error('Errore:', error); // Debugging output
-    res.status(400).json({ message: 'Errore nel calcolo della distanza percorsa per mese', error });
+    res.status(500).json({ message: error.message });
   }
 });
   
@@ -387,6 +359,16 @@ const graficoVelocita = asyncHandler(async (req, res) => {
     if (workouts.length === 0) {
       return res.status(200).json([]);
     }
+
+    // Definisci l'ordine desiderato dei tipi di allenamento
+    const order = [
+      'Lungo',
+      'Tempo Run',
+      'Fartlek',
+      'Ripetute',
+      'Corsa Semplice',
+      'Progressivo'
+    ];
 
     // Oggetto per raggruppare le velocità per tipo di allenamento
     const speedData = {};
@@ -412,16 +394,15 @@ const graficoVelocita = asyncHandler(async (req, res) => {
       }
     });
 
-    // Trasforma l'oggetto in un array con la velocità media per ciascun tipo
-    const averageSpeedData = Object.keys(speedData).map(type => ({
-      type,
-      averageSpeed: (speedData[type].totalSpeed / speedData[type].count).toFixed(2) // Media delle velocità
-    }));
+    // Trasforma l'oggetto in un array con solo le velocità medie
+    const averageSpeeds = order.map(type => (
+      speedData[type] ? (speedData[type].totalSpeed / speedData[type].count).toFixed(2) : '0.00'
+    ));
 
-    console.log('Average Speed Data:', averageSpeedData); // Debugging output
+    console.log('Average Speeds:', averageSpeeds); // Debugging output
 
-    // Rispondi con i dati
-    res.status(200).json(averageSpeedData);
+    // Rispondi con le medie delle velocità
+    res.status(200).json(averageSpeeds);
 
   } catch (error) {
     console.error('Errore:', error); // Debugging output

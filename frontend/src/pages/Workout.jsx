@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Button, Alert } from "react-bootstrap";
+import { Container, Row, Col, Button, Alert, Modal } from "react-bootstrap";
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -16,12 +16,38 @@ import workoutImage from '../utils/images/cardWorkImg.jpg';
 
 function Workout() {
     const [workouts, setWorkouts] = useState([]);
-    const [selectedDate, setSelectedDate] = useState(null);  // selectedDate inizialmente impostato a null
+    const [selectedDate, setSelectedDate] = useState(null);
     const [error, setError] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    const [selectedWorkoutId, setSelectedWorkoutId] = useState(null);
+
+    const handleDelete = async () => {
+        if (!selectedWorkoutId) return;
+        
+        const loadingToast = toast.loading("Eliminazione in corso...");
+
+        try {
+            await deleteWorkout(selectedWorkoutId);
+            setWorkouts(workouts.filter(workout => workout._id !== selectedWorkoutId));
+            toast.success('Workout eliminato con successo!');
+        } catch (error) {
+            toast.error("Errore durante l'eliminazione del workout.");
+        } finally {
+            toast.dismiss(loadingToast);
+            setShowModal(false);
+        }
+    };
+
+    const handleShowModal = (id) => {
+        setSelectedWorkoutId(id);
+        setShowModal(true);
+    };
+
+    const handleCloseModal = () => setShowModal(false);
 
     useEffect(() => {
         const fetchWorkouts = async () => {
-            if (!selectedDate) return;  // Se nessuna data è selezionata, non fare nulla
+            if (!selectedDate) return;
 
             const loadingToast = toast.loading("Caricamento degli allenamenti...");
 
@@ -40,20 +66,6 @@ function Workout() {
         fetchWorkouts();
     }, [selectedDate]);
 
-    const handleSubmit = async (id) => {
-        const confirmDelete = window.confirm("Sei sicuro di voler eliminare questo allenamento?");
-        if (confirmDelete) {
-            try {
-                const response = await deleteWorkout();
-                setWorkouts(workouts.filter(workout => workout._id !== id));
-                toast.success('Workout eliminato con successo!');
-            } catch (error) {
-                console.error("Errore durante l'eliminazione del workout", error);
-                toast.error("Errore durante l'eliminazione del workout.");
-            }
-        }
-    };
-
     return (
         <>
             <Navbar />
@@ -61,10 +73,10 @@ function Workout() {
                 <h2>Workout</h2><hr />
                 <Row>
                     <Col md={8} xs={12}>
-                        <BnvCard para={'Seleziona una data per visualizzare e/o eliminare un workout!'} img={run}/>
+                        <BnvCard para={'Seleziona una data per visualizzare e/o eliminare un workout!'} img={run} />
                     </Col>
                     <Col md={4} xs={12}>
-                        <CardMemo /> 
+                        <CardMemo />
                     </Col>
                 </Row>
                 <Row>
@@ -72,7 +84,7 @@ function Workout() {
                         <div className="calendar-container spaced-card">
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                 <DateCalendar
-                                    value={selectedDate ? dayjs(selectedDate) : null} 
+                                    value={selectedDate ? dayjs(selectedDate) : null}
                                     onChange={(newDate) => setSelectedDate(newDate ? newDate.format('YYYY-MM-DD') : null)}
                                 />
                             </LocalizationProvider>
@@ -87,18 +99,17 @@ function Workout() {
                                         <Card sx={{ 
                                             minWidth: 275, 
                                             boxShadow: 3, 
-                                            borderRadius: 2,  // Bordo arrotondato
+                                            borderRadius: 2, 
                                             display: 'flex', 
                                             flexDirection: 'column', 
-                                            alignItems: 'center'  // Centrare gli elementi
+                                            alignItems: 'center'
                                         }}>
                                             <CardContent>
                                                 <Row>
                                                     <Typography variant="h6" component="div" gutterBottom sx={{ fontWeight: 'bold', mb: 2 }}>
-                                                                Allenamento #{index + 1} {/* Titolo con numero progressivo */}
+                                                        Allenamento #{index + 1}
                                                     </Typography>
                                                     <Col>
-
                                                         <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 'bold' }}>
                                                             Tipo: {workout.type}
                                                         </Typography>
@@ -117,10 +128,10 @@ function Workout() {
                                                     </Col>
                                                 </Row>
                                             </CardContent>
-                                            <Box sx={{ mb: 2 }}> {/* Margine inferiore per separare il bottone */}
+                                            <Box sx={{ mb: 2 }}>
                                                 <Button
                                                     variant="danger"
-                                                    onClick={() => handleSubmit(workout._id)}
+                                                    onClick={() => handleShowModal(workout._id)}
                                                 >
                                                     Elimina
                                                 </Button>
@@ -143,6 +154,22 @@ function Workout() {
                     </Col>
                 </Row>
             </Container>
+
+            <Modal show={showModal} onHide={handleCloseModal}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Conferma Eliminazione</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>Sei sicuro di voler eliminare questo allenamento?</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleCloseModal}>
+                        Annulla
+                    </Button>
+                    <Button variant="primary" onClick={handleDelete}>
+                        Elimina
+                    </Button>
+                </Modal.Footer>
+            </Modal>
+
             <Toaster />
         </>
     );

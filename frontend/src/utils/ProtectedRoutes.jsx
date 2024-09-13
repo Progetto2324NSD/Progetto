@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Outlet, Navigate } from 'react-router-dom';
-import axios from '../api_vespe/axiosConfig';
-
+import { auth } from '../service/userService';
 const ProtectedRoutes = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -10,9 +9,7 @@ const ProtectedRoutes = () => {
     
     const checkAuth = async () => {
       try {
-        const response = await axios.get('/user/auth', {
-          withCredentials: true,
-        });
+        const response = await auth();
 
         if (response.status === 200) {
           setUser(response.data); // I dati dell'utente sono già in response.data

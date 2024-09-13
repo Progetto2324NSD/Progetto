@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
-import Navbar from "../components/NavbarLogo";
+
+//Import React
 import { Container, Row, Col } from "react-bootstrap";
+
+//Immagini
 import welcome from '../utils/images/welcome.png';
 
 // Stile
@@ -11,7 +14,7 @@ import MapCard from '../components/cards/MapCard';
 import QltCard from '../components/cards/QltCard';
 import Workout from '../components/cards/WorkoutCard';
 import BnvCard from '../components/cards/BnvCard';
-import LastWorkoutMap from '../components/LastWorkoutMap';
+import Navbar from "../components/NavbarLogo";
 
 function Dashboard() {
     const [distance, setDistance] = useState(null);

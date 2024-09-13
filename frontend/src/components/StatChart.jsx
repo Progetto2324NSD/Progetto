@@ -2,14 +2,15 @@ import React, { useEffect, useState } from "react";
 import toast from 'react-hot-toast';
 import { PieChart } from '@mui/x-charts/PieChart';
 import { BarChart } from '@mui/x-charts/BarChart';
-import Form from 'react-bootstrap/Form';
 
-import { graficoAllenamenti, graficoTempo } from "../service/workoutService";
+import { graficoAllenamenti, graficoDistanza, graficoTempo, graficoVelocita } from "../service/workoutService";
 
 const StatChart = ({ selectedButton }) => {
   // Stati per i dati e il tipo di allenamento
   const [dataG, setDataG] = useState([]);
   const [dataT, setDataT] = useState([]);
+  const [dataD, setDataD] = useState([]);
+  const [dataV, setDataV] = useState([]);
 
   useEffect(() => {
     const fetchDataTipo = async () => {
@@ -44,6 +45,33 @@ const StatChart = ({ selectedButton }) => {
     fetchDataTempo();
   }, []);
 
+  useEffect(() => {
+    const fetchDataDistanza = async() => {
+      try{
+        const responseDistanza = await graficoDistanza();
+        setDataD(responseDistanza.data);
+      }catch(error){
+        toast.error("Errore nel caricamento dei dati");
+      }
+    }
+    fetchDataDistanza();
+  },[]);
+
+  useEffect(() => {
+    const fetchDataVelocita = async() => {
+      try{
+        const responseVelocita = await graficoVelocita();
+        setDataV(responseVelocita.data);
+      }catch(error){
+        toast.error("Errore nel caricamento dei dati");
+      }
+    }
+    fetchDataVelocita();
+  },[]);
+
+  const mesiAbbreviazioni = ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"];
+  const ordineEse = ["Lungo", "Tempo Run", "Fartlek", "Ripetute", "Corsa Semplice", "Progressivo"];
+
   const renderChart = () => {
     switch (selectedButton) {
       case 'tempo':
@@ -57,7 +85,14 @@ const StatChart = ({ selectedButton }) => {
           </div>
         );
       case 'distanza':
-        return <p>Testo per grafico distanza</p>;
+        return (
+          <BarChart
+            series={[{ data: dataD }]}
+            xAxis={[{ scaleType: 'band', data: mesiAbbreviazioni }]}
+            width={500}
+            height={300}
+          />
+        );
       case 'allenamenti':
         return (
           <div className='centroGrafici'>
@@ -69,7 +104,14 @@ const StatChart = ({ selectedButton }) => {
           </div>
         );
       case 'velocita':
-        return <p>CIAO</p>;
+        return (
+          <BarChart
+            series={[{ data: dataV }]}
+            xAxis={[{ scaleType: 'band', data: ordineEse }]}
+            width={500}
+            height={300}
+          />
+        );
       default:
         return <p>Selona un pulsante per visualizzare il grafico.ezi</p>;
     }

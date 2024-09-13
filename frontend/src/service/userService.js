@@ -103,3 +103,14 @@ export const logout = async() => {
         throw error;  // Propaga l'errore per essere gestito nel componente chiamante
     }
 };
+
+export const auth = async() => {
+    try{
+        const response = await axios.get('/user/auth', {
+            withCredentials: true
+        });
+        return response;
+    }catch(error){
+        throw error;
+    }
+};

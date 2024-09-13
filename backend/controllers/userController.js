@@ -118,6 +118,7 @@ const loginUser = asyncHandler(async (req, res) => {
 // @desc Verifico la risposta del middleware protect
 // @route GET /user/auth
 // @access Private
+// -->RICORDARSI DI ELIMINARE LA PASSWORD E I DATI SENSIBILI
 const verificaAuth = asyncHandler(async(req, res) => {
     res.status(200).json(req.user);
 })
@@ -140,9 +141,7 @@ const getData = asyncHandler (async (req, res,) => {
     res.json({ message: "Info utente stampati"});
 });
  
-// @desc Genera OTP
-// @route POST /user/reset-password
-// @access Public
+//Funzione richiamata nel mailOTP per generare un codice OTP casuale a 4 cifre
 const generateOTP = (length = 4) => {
     let otp = '';
     //Genera un numero da 0 a 9
@@ -153,9 +152,9 @@ const generateOTP = (length = 4) => {
 };
  
  
-//
-//
-//
+// @desc Invia la mail all'utente con il codice OTP
+// @route POST /user/reset-password
+// @access Private
 const mailOTP = asyncHandler(async (req, res) => {
     //Estrae l'email dal corpo della richiesta
     const { email } = req.body;
@@ -226,9 +225,9 @@ const mailOTP = asyncHandler(async (req, res) => {
 });
  
  
-//
-//
-//
+// @desc verifica il codice OTP inviato
+// @route POST /user/verificaOTP
+// @access Private
 const verificaOTP = asyncHandler(async (req, res) => {
     try {
         const { email, otp } = req.body;
@@ -302,10 +301,7 @@ const cambiaPassword = asyncHandler(async (req, res) => {
         res.status(200).json({ message: 'Errore' });
     }
 });
- 
-const generateRandomString = (length = 32) => {
-    return crypto.randomBytes(length).toString('hex');
-};
+
  
 // @desc Effettua il logout facendo scadere il cookie (con l'invalidazione del token presente per evitare che l'id rimanga salvato)
 // @route POST user/logout
@@ -330,7 +326,7 @@ const logout = asyncHandler(async (req, res) => {
 //Token che può essere usato per autenticare l'utente nelle richieste future
 const generateToken = (id) => {
     return jwt.sign({id}, process.env.JWT, {
-        expiresIn: '1h'
+        expiresIn: '24h'
     })
 }
  
