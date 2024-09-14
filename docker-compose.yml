@@ -4,26 +4,26 @@ services:
     build:
       context: ./frontend
     ports:
-      - "3000:80"
+      - "3000:80" # Mappa la porta 80 del container alla porta 3000 dell'host
     depends_on:
       - backend
-  
+
   backend:
     build:
       context: ./backend
     ports:
-      - "5000:5000"
+      - "5000:5000" # Mappa la porta 5000 del container alla porta 5000 dell'host
     environment:
-      - MONGODB_URI=mongodb://mongo:27017/ProgettoWeb
+      - MONGODB_URI=mongodb://mongo:27017/ProgettoWeb # Cambia questo per l'ambiente di produzione
     depends_on:
       - mongo
 
   mongo:
     image: mongo:latest
     ports:
-      - "27017:27017"
+      - "27017:27017" # Mappa la porta 27017 del container alla porta 27017 dell'host
     volumes:
       - mongo_data:/data/db
 
 volumes:
-  mongo_data:
+  mongo_data: # Volume per la persistenza dei dati MongoDB
