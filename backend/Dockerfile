@@ -1,20 +1,20 @@
-# Usa un'immagine Node.js ufficiale
+# Usa l'immagine di base
 FROM node:16
 
 # Imposta la directory di lavoro
 WORKDIR /app
 
-# Copia i file package.json e package-lock.json
+# Copia i file di configurazione
 COPY package*.json ./
 
 # Installa le dipendenze
 RUN npm install
 
-# Copia tutto il contenuto del backend
+# Copia tutto il resto
 COPY . .
 
-# Espone la porta su cui gira il backend
-EXPOSE 5000
+# Aggiungi permessi di esecuzione per nodemon
+RUN npm install -g nodemon
 
-# Avvia il server
-CMD ["npm", "start"]
+# Comando di avvio
+CMD ["nodemon", "index.js"]
