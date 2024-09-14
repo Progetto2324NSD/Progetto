@@ -1,15 +1,23 @@
 import React from 'react';
+
+//Import React
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { loginUser } from '../service/userService';  // Importa la funzione
+
+// Importa la funzione
+import { loginUser } from '../service/userService';  
 
 //Stile
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './stile/style.css';
+
+//Immagini
 import immagineLogin from '../utils/images/1.png';
 
 //Componenti
 import PasswordInput from '../components/PasswordInput';
+
+//Libreria
 import toast from "react-hot-toast";
 
 
@@ -56,7 +64,8 @@ function Login() {
     };
 
     try{
-      const response = await loginUser(userData);  // Usa la funzione esterna
+      // Usa la funzione esterna
+      const response = await loginUser(userData);  
 
       localStorage.setItem('user', JSON.stringify(response.data));
 
@@ -69,7 +78,8 @@ function Login() {
 
       if (response.status === 200) {
         toast.success("Accesso avvenuto con successo", {
-          id: loadingToast, // Aggiorna il toast di caricamento
+          // Aggiorna il toast di caricamento
+          id: loadingToast, 
         });
         // Reindirizzo alla dashboard (CONFRONTARSI PER AGGIUNGERE L'ETA' AL PRIMO ACCESSO(?))
         navigate('/Dashboard');

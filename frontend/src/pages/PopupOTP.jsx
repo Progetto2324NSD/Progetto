@@ -1,14 +1,23 @@
 import React, { useEffect, useState } from 'react';
+
+//Stile
 import "../pages/stile/style.css";
+
+//Import React
 import { useNavigate } from 'react-router-dom';
 import { MuiOtpInput } from 'mui-one-time-password-input';
+
+//Libreria
 import toast from 'react-hot-toast';
+
+// Funzione che invia la richiesta
 import { verificaOTP } from '../service/userService';
  
  
 const PopupOTP = ({ isVisible, onClose, email }) => {
     const [otp, setOtp] = useState('');
-    const [timeRemaining, setTimeRemaining] = useState(300000); // 5 minuti in millisecondi
+    // 5 minuti in millisecondi
+    const [timeRemaining, setTimeRemaining] = useState(300000); 
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -20,15 +29,17 @@ const PopupOTP = ({ isVisible, onClose, email }) => {
                         clearInterval(timer);
                         return 0;
                     }
-                    return prevTime - 1000; // Decrementa di 1 secondo
+                    // Decrementa di 1 secondo
+                    return prevTime - 1000; 
                 });
             }, 1000);
         } else {
             clearInterval(timer);
-            setTimeRemaining(300000); // Reset del tempo
+            // Reset del tempo
+            setTimeRemaining(300000); 
         }
-
-        return () => clearInterval(timer); // Pulisce l'intervallo al dismount
+// Pulisce l'intervallo al dismount
+        return () => clearInterval(timer); 
     }, [isVisible]);
 
     const formatTime = (milliseconds) => {

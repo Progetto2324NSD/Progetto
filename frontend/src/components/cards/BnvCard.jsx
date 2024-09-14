@@ -1,12 +1,21 @@
 import React from "react";
+
+//Import React
+import { useState, useEffect } from 'react';
+
+//Icone MUI
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Avatar from '@mui/material/Avatar';
+
+//Stile
 import '../../pages/stile/style.css';
 import 'boxicons/css/boxicons.min.css';
+
+// Importa la funzione di servizio
 import { getData } from "../../service/userService";
-import { useState, useEffect } from 'react';
+
 
 function BnvCard({ para, img }) {
 

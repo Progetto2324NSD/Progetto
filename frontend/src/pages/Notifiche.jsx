@@ -1,9 +1,19 @@
 import React, { useState, useEffect } from 'react';
+
+//Import React
 import { Container, ListGroup, Button } from "react-bootstrap";
+
+//Componenti
 import Navbar from '../components/NavbarLogo';
 import BnvCard from '../components/cards/BnvCard';
+
+//Immagini
 import notifiche from '../utils/images/notifiche.png';
+
+// Funzione che invia la richiesta
 import notiService from '../service/notiService';
+
+//Stile
 import './stile/style.css';
 
 function Notifiche() {

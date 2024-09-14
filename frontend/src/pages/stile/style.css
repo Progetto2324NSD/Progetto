@@ -414,6 +414,21 @@ body {
   .spaced-card {
     margin-bottom: 24px; /* Regola questo valore secondo le tue necessità */
   }
+
+  .chart-card {
+    padding: 20px; /* Rimuovi il padding per le card su dispositivi mobili */
+  }
+
+  .chart-container {
+    display: flex;
+    justify-content: center;
+    padding: 0 10px; /* Spazio laterale per evitare che la legenda esca dallo schermo */
+  }
+  
+  .chart-placeholder {
+    height: auto; /* Permette al contenitore di adattarsi all'altezza del grafico */
+    overflow: hidden; /* Nascondi l'overflow per evitare barre di scorrimento non necessarie */
+  }
 }
 
 
@@ -433,7 +448,5 @@ body {
   margin: 0; /* Rimuove il margine predefinito */
 }
 
-
- 
 
  

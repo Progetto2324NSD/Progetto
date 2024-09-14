@@ -1,8 +1,14 @@
 import React, { useEffect, useRef } from 'react';
+
+//Mappe
 import mapboxgl from 'mapbox-gl';
-import 'mapbox-gl/dist/mapbox-gl.css';
 import MapboxDirections from '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions';
+
+// Stile
+import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-directions/dist/mapbox-gl-directions.css';
+
+//Import React
 import { useMediaQuery } from 'react-responsive';
 
 // Assicurati di avere un token di Mapbox in una variabile d'ambiente
@@ -50,7 +56,8 @@ function MapComponent({ onDistanceChange }) {
 
   const mapContainerStyle = {
     width: '100%',
-    height: isMobile ? '600px' : '400px', // Altezza maggiore per dispositivi mobili
+    // Altezza maggiore per dispositivi mobili
+    height: isMobile ? '600px' : '400px', 
     position: 'relative',
   };
 

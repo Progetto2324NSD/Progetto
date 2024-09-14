@@ -1,17 +1,28 @@
 import React, { useEffect, useState } from "react";
-import Navbar from "../components/NavbarLogo";
+
+//Import React
 import { Container, Row, Col } from "react-bootstrap";
+
+//Componenti
 import StatButton from "../components/StatButton";
-import './stile/style.css';
+import Navbar from "../components/NavbarLogo";
 import BnvCard from '../components/cards/BnvCard';
+import ChartCard from "../components/cards/ChartCard";
+
+//Immagini
 import stat from '../utils/images/stat.png';
+
+//Stile
+import './stile/style.css';
 
 //Icone MUI
 import TimerRoundedIcon from '@mui/icons-material/TimerRounded';
 import LocationOnRoundedIcon from '@mui/icons-material/LocationOnRounded';
 import FitnessCenterRoundedIcon from '@mui/icons-material/FitnessCenterRounded';
 import SpeedRoundedIcon from '@mui/icons-material/SpeedRounded';
-import ChartCard from "../components/cards/ChartCard";
+
+
+// Importa la funzione di servizio
 import { avgDayWorkout, distanceDayWorkout, numDayWorkout, timeDayWorkout } from "../service/workoutService";
 
 

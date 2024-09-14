@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from "react";
+
+//Icone MUI
 import { Card, CardContent, Typography, Box } from '@mui/material';
 import { Gauge, gaugeClasses } from '@mui/x-charts/Gauge';
+
+// Importa la funzione di servizio
 import { calcolaPunteggio } from "../../service/workoutService";
 
 function QltCard({ title }) {

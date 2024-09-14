@@ -1,12 +1,20 @@
 import React from 'react';
+
+//Import React
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from 'react';
-import { registerUser } from '../service/userService';  // Importa la funzione di servizio
+
+// Importa la funzione di servizio
+import { registerUser } from '../service/userService'; 
+
+//Libreria
 import toast from "react-hot-toast";
 
 //Stile
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './stile/style.css';
+
+//Immagini
 import immagineLogin from '../utils/images/1.png';
 
 //Componenti
@@ -82,7 +90,8 @@ function Register() {
     };
 
     try{
-      const response = await registerUser(userData);  // Usa la funzione di servizio
+      // Usa la funzione di servizio
+      const response = await registerUser(userData);  
 
       localStorage.setItem('user', JSON.stringify(response.data));
 
@@ -95,7 +104,8 @@ function Register() {
 
       if (response.status === 201) {
         toast.success("Registrazione avvenuta con successo", {
-          id: loadingToast, // Aggiorna il toast di caricamento
+          // Aggiorna il toast di caricamento
+          id: loadingToast, 
         });
         // Reindirizzo alla dashboard (CONFRONTARSI PER AGGIUNGERE L'ETA' AL PRIMO ACCESSO(?))
         navigate('/Dashboard');

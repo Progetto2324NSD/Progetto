@@ -1,10 +1,22 @@
-import Logo from "../utils/images/logo.png";
-import { Navbar, Container, Button, Offcanvas, Nav } from "react-bootstrap";
 import { useState } from 'react';
-import "boxicons";
-import "../pages/stile/style.css";
+
+//Immagini
+import Logo from "../utils/images/logo.png";
+
+//Import React
+import { Navbar, Container, Button, Offcanvas, Nav } from "react-bootstrap";
 import { Link, useNavigate } from 'react-router-dom';
+
+//Icone
+import "boxicons";
+
+// Stile
+import "../pages/stile/style.css";
+
+//Libreria
 import toast from 'react-hot-toast';
+
+// Importa la funzione di servizio
 import { logout } from "../service/userService";
  
 function NavbarLogo() {

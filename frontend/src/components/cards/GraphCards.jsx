@@ -1,4 +1,6 @@
 import React from "react";
+
+//Icone MUI
 import { Card, CardContent, Typography } from '@mui/material';
 
 function GraphCards({ title, para, children }) {

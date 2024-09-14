@@ -1,9 +1,19 @@
 import React, { useState, useEffect } from "react";
+
+//Import React
 import { Link } from 'react-router-dom';
+
+//Immagini
 import immagineForgot from "../utils/images/forgotPass.png";
+
+//Libreria
 import toast from "react-hot-toast";
+
+// Importa il componente `PopupOTP` dalla directory corrente (`./PopupOTP`).
 import PopOTP from "./PopupOTP";
-import { resetPassword } from "../service/userService"; // Funzione che invia la richiesta
+
+// Funzione che invia la richiesta
+import { resetPassword } from "../service/userService"; 
 
 function Forgot() {
     const [email, setEmail] = useState("");
@@ -24,8 +34,10 @@ function Forgot() {
                 setAttemptsLeft(5 - count);
                 if (count >= 5) {
                     toast.error("Hai raggiunto il limite giornaliero di 5 richieste.");
-                    setIsSubmitting(true); // Disabilita il bottone
-                    return false; // Limite raggiunto, blocca invio
+                    // Disabilita il bottone
+                    setIsSubmitting(true); 
+                    // Limite raggiunto, blocca invio
+                    return false; 
                 }
             } else {
                 // Se la data è diversa, resettiamo il conteggio per il nuovo giorno
@@ -37,7 +49,8 @@ function Forgot() {
             localStorage.setItem(email, JSON.stringify({ count: 0, lastRequestDate: currentDate }));
             setAttemptsLeft(5);
         }
-        return true; // Permetti invio
+        // Permetti invio
+        return true; 
     };
 
     // Funzione per aggiornare i tentativi nel localStorage
@@ -48,7 +61,8 @@ function Forgot() {
 
         // Aggiorna i dati nel localStorage
         localStorage.setItem(email, JSON.stringify({ count: newCount, lastRequestDate }));
-        setAttemptsLeft(5 - newCount); // Aggiorna tentativi rimanenti
+        // Aggiorna tentativi rimanenti
+        setAttemptsLeft(5 - newCount); 
     };
 
     const handleSubmit = async (e) => {
@@ -62,7 +76,8 @@ function Forgot() {
         setIsSubmitting(true);
 
         try {
-            const response = await resetPassword(email);  // Usa la funzione di servizio esterna
+            // Usa la funzione di servizio esterna
+            const response = await resetPassword(email);  
     
             if (response.status === 200) {
                 let countdown = 3;
@@ -79,9 +94,12 @@ function Forgot() {
 
                 setTimeout(() => {
                     clearInterval(interval);
-                    toast.dismiss(countdownToast);  // Rimuove il toast del countdown
-                    setShowModal(true);  // Mostra il popup per inserire l'OTP
-                    setIsSubmitting(false); // Riabilita il bottone
+                    // Rimuove il toast del countdown
+                    toast.dismiss(countdownToast);  
+                    // Mostra il popup per inserire l'OTP
+                    setShowModal(true);  
+                    // Riabilita il bottone
+                    setIsSubmitting(false); 
                 }, 3000);
 
                 // Aggiorna il numero di tentativi
@@ -89,13 +107,15 @@ function Forgot() {
 
             } else {
                 toast.error("Errore durante l'invio dell'email.");
-                setIsSubmitting(false); // Riabilita il bottone anche in caso di errore
+                // Riabilita il bottone anche in caso di errore
+                setIsSubmitting(false); 
             }
         } catch (error) {
             console.error("Errore durante il reset della password:", error);
             const errorMessage = error.response?.data?.message || "Errore durante il reset della password. Verifica la tua email e riprova.";
             toast.error(errorMessage);
-            setIsSubmitting(false); // Riabilita il bottone in caso di errore
+            // Riabilita il bottone in caso di errore
+            setIsSubmitting(false); 
         }
     }
 
@@ -145,7 +165,8 @@ function Forgot() {
                             <button 
                                 className="btn btn-lg btn-primary w-100 fs-6"
                                 onClick={handleSubmit}
-                                disabled={isSubmitting} // Disabilita il bottone se isSubmitting è true
+                                // Disabilita il bottone se isSubmitting è true
+                                disabled={isSubmitting} 
                             >
                                 Reset
                             </button>

@@ -1,5 +1,9 @@
 import { useState, useEffect} from 'react';
+
+//Icone MUI
 import { Card, CardContent, Typography } from '@mui/material';
+
+//Stile
 import '../../pages/stile/style.css';
 
 function CardMemo(){

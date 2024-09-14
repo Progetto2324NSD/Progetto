@@ -1,9 +1,21 @@
 import React, { useState } from "react";
+
+//Icone MUI
 import { Card, CardContent, Typography, Button, Box } from '@mui/material';
+
+// Importa il componente `MapPopup` dalla directory corrente (`./MapPopup`).
 import MapPopup from '../MapPopup';
+
+//Libreria
 import toast from "react-hot-toast";
+
+// Stile
 import 'bootstrap/dist/css/bootstrap.min.css';
+
+//Import React
 import Form from 'react-bootstrap/Form';
+
+// Importa la funzione di servizio
 import { registerWorkout } from "../../service/workoutService";
 
 function WorkoutCard({ title }) {

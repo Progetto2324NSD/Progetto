@@ -1,5 +1,10 @@
+//Icone MUI
 import { Typography } from '@mui/material';
+
+// Stile
 import '../pages/stile/style.css';
+
+//Import React
 import { Row, Col } from 'react-bootstrap';
 
 function StatButton({ title, icon, value, description, isSelected, onClick }) {

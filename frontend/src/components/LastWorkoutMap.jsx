@@ -1,7 +1,15 @@
 import React, { useEffect, useRef, useState } from 'react';
+
+//Mappe
 import mapboxgl from 'mapbox-gl';
+
+// Stile
 import 'mapbox-gl/dist/mapbox-gl.css';
+
+// Importa la funzione di servizio
 import { lastWorkout } from '../service/workoutService';
+
+// Importa Axios con una configurazione personalizzata, definita nel file `axiosConfig` all'interno della cartella `api_vespe`. 
 import axios from '../api_vespe/axiosConfig';
 
 const MAPBOX_ACCESS_TOKEN = 'pk.eyJ1IjoibmljYWEiLCJhIjoiY20wbDdpNGFpMDJmeDJqczN0c3dycDJuMiJ9.Pu-Yepy-zww4R7_wiPiNBQ';

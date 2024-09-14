@@ -1,7 +1,13 @@
 import React from 'react';
+
+//Icone MUI
 import { Modal, Box, Typography, IconButton, Fade } from '@mui/material';
 import 'boxicons';
+
+// Importa il componente `MapComponent` dalla directory corrente (`./MapComponent`).
 import MapComponent from './MapComponent';
+
+//Import React
 import { useMediaQuery } from 'react-responsive';
 
 function MapPopup({ open, onClose, onDistanceChange }) {
@@ -25,18 +31,24 @@ function MapPopup({ open, onClose, onDistanceChange }) {
                         top: '50%',
                         left: '50%',
                         transform: 'translate(-50%, -50%)',
-                        width: isMobile ? '90vw' : '80vw', // Adattato per dispositivi mobili e desktop
-                        height: isMobile ? '70vh' : '80vh', // Adattato per dispositivi mobili e desktop
-                        maxWidth: '1200px', // Limita la larghezza massima
-                        maxHeight: '800px', // Limita l'altezza massima
+                        // Adattato per dispositivi mobili e desktop
+                        width: isMobile ? '90vw' : '80vw', 
+                         // Adattato per dispositivi mobili e desktop
+                        height: isMobile ? '70vh' : '80vh',
+                         // Limita la larghezza massima
+                        maxWidth: '1200px',
+                        // Limita l'altezza massima
+                        maxHeight: '800px', 
                         bgcolor: 'background.paper',
                         borderRadius: '16px',
                         boxShadow: 24,
-                        p: 2, // Ridotto padding per una migliore gestione dello spazio
+                        // Ridotto padding per una migliore gestione dello spazio
+                        p: 2, 
                         outline: 'none',
                         display: 'flex',
                         flexDirection: 'column',
-                        overflow: 'hidden', // Assicura che nulla esca fuori
+                         // Assicura che nulla esca fuori
+                        overflow: 'hidden',
                     }}
                 >
                     <IconButton

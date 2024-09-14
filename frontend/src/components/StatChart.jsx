@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from "react";
+
+//Libreria
 import toast from 'react-hot-toast';
+
+//Icone MUI
 import { PieChart } from '@mui/x-charts/PieChart';
 import { BarChart } from '@mui/x-charts/BarChart';
+import { useMediaQuery, useTheme } from '@mui/material';
 
+// Importa la funzione di servizio
 import { graficoAllenamenti, graficoDistanza, graficoTempo, graficoVelocita } from "../service/workoutService";
 
 const StatChart = ({ selectedButton }) => {
@@ -11,6 +17,9 @@ const StatChart = ({ selectedButton }) => {
   const [dataT, setDataT] = useState([]);
   const [dataD, setDataD] = useState([]);
   const [dataV, setDataV] = useState([]);
+
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm')); // True if screen size is small
 
   useEffect(() => {
     const fetchDataTipo = async () => {
@@ -37,7 +46,15 @@ const StatChart = ({ selectedButton }) => {
     const fetchDataTempo = async() => {
       try{
         const responseTempo = await graficoTempo();
-        setDataT(responseTempo.data);
+        const datiGrafico2 = [
+          { id: 0, value: responseTempo.data.corsaSemplice, label: 'Semplice', color: '#0d6efd' },
+          { id: 1, value: responseTempo.data.fartlek, label: 'Fartlek', color: '#1a7dff' },
+          { id: 2, value: responseTempo.data.lungo, label: 'Lungo', color: '#3389ff' },
+          { id: 3, value: responseTempo.data.progressivo, label: 'Progressivo', color: '#66a3ff' },
+          { id: 4, value: responseTempo.data.tempoRun, label: 'Tempo Run', color: '#99b3ff' },
+          { id: 5, value: responseTempo.data.ripetute, label: 'Ripetute', color: '#c2dfff' }
+        ]        
+        setDataT(datiGrafico2);
       }catch(error){
         toast.error("Errore nel caricamento dei dati");
       }
@@ -70,51 +87,51 @@ const StatChart = ({ selectedButton }) => {
   },[]);
 
   const mesiAbbreviazioni = ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"];
-  const ordineEse = ["Lungo", "Tempo Run", "Fartlek", "Ripetute", "Corsa Semplice", "Progressivo"];
+  const ordineEse = ["Lungo", "Tempo Run", "Fartlek", "Ripetute", "Semplice", "Progress"];
 
+  // Funzione che restituisce il grafico da visualizzare
   const renderChart = () => {
-    switch (selectedButton) {
-      case 'tempo':
-        return (
-          <div>
+    const chartDimensions = isMobile ? { width: 300, height: 200 } : { width: 500, height: 300 };
+    const containerStyles = isMobile ? { margin: '0 auto', padding: '0 20px' } : { margin: '0 auto' };
+
+    return (
+      <div style={containerStyles}>
+        {selectedButton === 'tempo' && (
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
             <PieChart
               series={[{ data: dataT }]}
-              width={500}
-              height={300}
+              width={chartDimensions.width}
+              height={chartDimensions.height}
             />
           </div>
-        );
-      case 'distanza':
-        return (
+        )}
+        {selectedButton === 'distanza' && (
           <BarChart
             series={[{ data: dataD }]}
             xAxis={[{ scaleType: 'band', data: mesiAbbreviazioni }]}
-            width={500}
-            height={300}
+            width={chartDimensions.width}
+            height={chartDimensions.height}
           />
-        );
-      case 'allenamenti':
-        return (
-          <div className='centroGrafici'>
+        )}
+        {selectedButton === 'allenamenti' && (
+          <div style={{ display: 'flex', justifyContent: 'center' }}>
             <PieChart
               series={[{ data: dataG }]}
-              width={500}
-              height={300}
+              width={chartDimensions.width}
+              height={chartDimensions.height}
             />
           </div>
-        );
-      case 'velocita':
-        return (
+        )}
+        {selectedButton === 'velocita' && (
           <BarChart
             series={[{ data: dataV }]}
             xAxis={[{ scaleType: 'band', data: ordineEse }]}
-            width={500}
-            height={300}
+            width={chartDimensions.width}
+            height={chartDimensions.height}
           />
-        );
-      default:
-        return <p>Selona un pulsante per visualizzare il grafico.ezi</p>;
-    }
+        )}
+      </div>
+    );
   };
 
   return (

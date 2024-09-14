@@ -1,6 +1,10 @@
 import React from 'react';
+
+//Icone MUI
 import { Card, CardContent, Typography, Box } from '@mui/material';
-import LastWorkoutMap from '../LastWorkoutMap'; // Assicurati che il percorso sia corretto
+
+// Importa il componente `LastWorkoutMap` dalla directory corrente (`./LastWorkoutMap`).
+import LastWorkoutMap from '../LastWorkoutMap'; 
 
 function MapCard({ title, para, onDistanceChange, onTypeChange, onDateChange, onTimeChange }) {
   return (

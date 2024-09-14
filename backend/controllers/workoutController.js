@@ -295,7 +295,7 @@ const graficoAllenamenti = asyncHandler(async (req, res) => {
 });
 
 // @desc Grafico dei tempi di ciascun tipo di workouts
-// @route GET /workout/grafico-allenamenti
+// @route GET /workout/distanza-allenamenti
 // @access Private
 const graficoDistanza = asyncHandler(async (req, res) => {
   try {
@@ -430,14 +430,44 @@ const graficoTempo = asyncHandler(async (req, res) => {
     ]);
 
     // Prepara i dati per il grafico a torta
-    const formattedData = data.map((item, index) => ({
-      id: index, // Usa un id unico per ciascun tipo di allenamento
-      value: item.totalTime,
-      label: item._id,
-      color: ['#0d6efd', '#1a7dff', '#3389ff', '#66a3ff', '#99b3ff', '#c2dfff'][index % 6] // Colori ciclici per i tipi di allenamento
-    }));
+    const formattedData = {
+      corsaSemplice: 0,
+      fartlek: 0,
+      lungo: 0,
+      progressivo: 0,
+      tempoRun: 0,
+      ripetute: 0
+    };
 
-    res.json(formattedData); // Restituisce i dati formattati
+    // Mappa i dati aggregati ai tipi di allenamento
+    data.forEach(item => {
+      switch (item._id) {
+        case 'Corsa Semplice':
+          formattedData.corsaSemplice = item.totalTime;
+          break;
+        case 'Fartlek':
+          formattedData.fartlek = item.totalTime;
+          break;
+        case 'Lungo':
+          formattedData.lungo = item.totalTime;
+          break;
+        case 'Progressivo':
+          formattedData.progressivo = item.totalTime;
+          break;
+        case 'Tempo Run':
+          formattedData.tempoRun = item.totalTime;
+          break;
+        case 'Ripetute':
+          formattedData.ripetute = item.totalTime;
+          break;
+        default:
+          break;
+      }
+    });
+
+    // Invia la risposta con il conteggio per ciascun tipo di allenamento
+    res.status(200).json(formattedData);
+
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Errore nel recupero dei dati' });

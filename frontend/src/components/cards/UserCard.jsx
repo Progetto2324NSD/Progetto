@@ -1,8 +1,12 @@
 import React from "react";
+
+//Icone MUI
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import FaceRoundedIcon from '@mui/icons-material/FaceRounded';
+
+// Stile
 import '../../pages/stile/style.css';
 
 function UserCard({ name }) {

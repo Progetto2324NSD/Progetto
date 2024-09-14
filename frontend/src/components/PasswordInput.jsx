@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+
+// Stile
 import 'boxicons/css/boxicons.min.css';
 
 const PasswordInput = ({ value, onChange, placeholder }) => {

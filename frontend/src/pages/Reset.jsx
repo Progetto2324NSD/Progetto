@@ -1,6 +1,11 @@
 import React from "react";
+
+//Import React
 import { useState } from 'react';
 import { Link, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+
+// Importa la funzione di servizio
 import { cambiaPassword } from '../service/userService';
 
 //Componenti
@@ -9,10 +14,12 @@ import PasswordInput from "../components/PasswordInput";
 //Stile
 import "./stile/style.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import immagineReset from '../utils/images/reset.png';
-import toast from "react-hot-toast";
-import { useLocation } from "react-router-dom";
 
+//Immagini
+import immagineReset from '../utils/images/reset.png';
+
+//Libreria
+import toast from "react-hot-toast";
 
 function Reset() {
 
@@ -43,14 +50,15 @@ function Reset() {
                 toast.error("Password non valida. Assicurati che contenga: \n - Almeno 8 caratteri \n - Almeno una lettera minuscola; \n - Almeno una lettera maiuscola; \n - Almeno un numero; \n - Almeno un carattere speciale ");
                 return;
             }
-
-            const response = await cambiaPassword(email, password); //Usa la funzione esterna
+            //Usa la funzione esterna
+            const response = await cambiaPassword(email, password);
 
             if (response.status === 200) {
                 toast.success("Password aggiornata con successo");
                 setTimeout(() => {
                     navigate('/Dashboard');
-                }, 1500); // 1500 ms = 1,5 secondi
+                },// 1500 ms = 1,5 secondi
+                 1500); 
             }
         }catch(error){
             toast.error("Errore durante la registrazione. Riprova più tardi.");

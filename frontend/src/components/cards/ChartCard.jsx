@@ -24,3 +24,4 @@ const ChartCard = ({ selectedButton, data }) => {
 };
 
 export default ChartCard;
+
