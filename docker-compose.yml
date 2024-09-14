@@ -1,23 +1,29 @@
-version: '3.8'
-
+version: '3'
 services:
-  backend:
-    image: your-backend-image
-    container_name: backend
+  frontend:
+    build:
+      context: ./frontend
     ports:
-      - "5000:5000" # Assicurati che questa porta sia quella che il tuo backend utilizza
+      - "3000:80"
+    depends_on:
+      - backend
+  
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "5000:5000"
     environment:
-      MONGODB_URI: mongodb://mongo:27017/ProgettoWeb # Configura l'URL di connessione per MongoDB
+      - MONGODB_URI=mongodb://mongo:27017/ProgettoWeb
     depends_on:
       - mongo
 
   mongo:
     image: mongo:latest
-    container_name: mongo
     ports:
-      - "27017:27017" # Porta di MongoDB, se devi accedere direttamente
+      - "27017:27017"
     volumes:
-      - mongo_data:/data/db # Persistenza dei dati
+      - mongo_data:/data/db
 
 volumes:
   mongo_data:
