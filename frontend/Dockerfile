@@ -1,28 +1,26 @@
-# Fase 1: Build
-FROM node:16 AS build
+# Usa un'immagine Node.js ufficiale
+FROM node:16
 
 # Imposta la directory di lavoro
 WORKDIR /app
 
-# Copia i file di configurazione
+# Copia i file package.json e package-lock.json
 COPY package*.json ./
 
 # Installa le dipendenze
 RUN npm install
 
-# Copia tutto il resto
+# Copia tutto il contenuto del frontend
 COPY . .
 
-# Costruisci il progetto
+# Compila il progetto
 RUN npm run build
 
-# Fase 2: Serve
+# Usa un server Nginx per servire il frontend
 FROM nginx:alpine
+COPY --from=0 /app/build /usr/share/nginx/html
 
-# Copia i file buildati dal contesto di build
-COPY --from=build /app/build /usr/share/nginx/html
-
-# Espone la porta 80
+# Espone la porta 80 per Nginx
 EXPOSE 80
 
 # Avvia Nginx
