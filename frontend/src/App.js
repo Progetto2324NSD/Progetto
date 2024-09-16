@@ -20,15 +20,10 @@ function App() {
         <Route path="/Register" element={<Register />} />
         <Route path="/ForgotPassword" element={<ForgotPassword />} />
         <Route path="/Dashboard" element={<Dashboard />} />
-          <Route path="/Workout" element={<Workout />} />
-          <Route path="/Statistiche" element={<Stat />} />
-          <Route path="/Notifiche" element={<Notifiche />} />
-          <Route path="/ResetPassword" element={<ResetPassword />} />
-
-        <Route element={<ProtectedRoutes />}>
-
-        </Route>
-
+        <Route path="/Workout" element={<Workout />} />
+        <Route path="/Statistiche" element={<Stat />} />
+        <Route path="/Notifiche" element={<Notifiche />} />
+        <Route path="/ResetPassword" element={<ResetPassword />} />
 
       </Routes>
     </Router>
