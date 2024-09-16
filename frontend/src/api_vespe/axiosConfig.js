@@ -2,7 +2,8 @@ import axios from 'axios';
 
 // Crea un'istanza di Axios
 const instance = axios.create({
-  baseURL: 'https://progetto.onrender.com/', // URL di base per le tue API
+  baseURL: 'https://progetto.onrender.com/',
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json'
   }
