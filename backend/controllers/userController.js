@@ -96,10 +96,10 @@ const loginUser = asyncHandler(async (req, res) => {
  
         // Imposta il cookie con il token
         res.cookie('token', token, {
-            httpOnly: false,
+            httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'None',
-            path: '/'
+            domain: 'https://progettofrontend.onrender.com'
         });
  
         res.json({
