@@ -60,6 +60,7 @@ const createUser = asyncHandler (async (req, res) => {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'None',
+            path: '/'
         });
  
         // Invia la risposta con i dettagli dell'utente
@@ -98,6 +99,7 @@ const loginUser = asyncHandler(async (req, res) => {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'None',
+            path: '/'
         });
  
         res.json({
