@@ -115,8 +115,8 @@ const loginUser = asyncHandler(async (req, res) => {
 // @access Private
 const verificaAuth = asyncHandler(async (req, res) => {
     // Non restituisco la password o altri dati sensibili
-    const { _id, name, email } = req.user;
-    res.status(200).json({ _id, name, email });
+    //const { _id, name, email } = req.user;
+    res.status(200); //.json({ _id, name, email });
 });
  
 // @desc Dati Utente
