@@ -3,6 +3,7 @@ import axios from 'axios';
 // Crea un'istanza di Axios
 const instance = axios.create({
   baseURL: 'https://progetto-backend.onrender.com',
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json'
   }
