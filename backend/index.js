@@ -16,8 +16,9 @@ const app = express();
 
 // Cors per permettere le richieste da altri domini
 app.use(cors({
-    origin: 'http://localhost:3000',
-    credentials: true
+    origin: 'https://progetto-6.onrender.com/',
+    credentials: true,
+
 }));
 
 // Parser dei cookies
