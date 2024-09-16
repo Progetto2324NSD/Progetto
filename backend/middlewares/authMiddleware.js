@@ -8,6 +8,7 @@ const protect = asyncHandler(async (req, res, next) => {
   // Controllo se il token è presente nei cookie
   if (req.cookies && req.cookies.token) {
     token = req.cookies.token;
+    console.log(token);
   }
 
   // Se il token non è nei cookie, controllo anche l'header Authorization
@@ -17,7 +18,10 @@ const protect = asyncHandler(async (req, res, next) => {
     req.headers.authorization.startsWith('Bearer')
   ) {
     token = req.headers.authorization.split(' ')[1];
+    console.log(token);
   }
+
+  console.log(token);
 
 
   // Verifico il token
