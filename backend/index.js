@@ -18,6 +18,8 @@ const app = express();
 app.use(cors({
     origin: 'https://progetto-6.onrender.com/',
     credentials: true,
+    methods: 'GET, POST, PUT, DELETE',
+    allowedHeaders: 'Content-Type,Authorization'
 
 }));
 
