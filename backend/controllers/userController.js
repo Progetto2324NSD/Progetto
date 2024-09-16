@@ -96,7 +96,7 @@ const loginUser = asyncHandler(async (req, res) => {
  
         // Imposta il cookie con il token
         res.cookie('token', token, {
-            httpOnly: true,
+            httpOnly: false,
             secure: process.env.NODE_ENV === 'production',
             sameSite: 'None',
             path: '/'
