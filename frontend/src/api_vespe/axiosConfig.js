@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Crea un'istanza di Axios
 const instance = axios.create({
-  baseURL: 'http://localhost:5000', // URL di base per le tue API
+  baseURL: 'https://progettobackend.onrender.com',
   headers: {
     'Content-Type': 'application/json'
   }
