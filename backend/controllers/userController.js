@@ -59,7 +59,7 @@ const createUser = asyncHandler (async (req, res) => {
         res.cookie('token', token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'Strict',
+            sameSite: 'strict',
         });
  
         // Invia la risposta con i dettagli dell'utente
