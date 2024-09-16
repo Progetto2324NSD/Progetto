@@ -16,7 +16,7 @@ const app = express();
 
 // Cors per permettere le richieste da altri domini
 app.use(cors({
-    origin: 'https://progetto-frontend.onrender.com',
+    origin: 'https://progetto-frontend.onrender.com/',
     credentials: true,
     methods: 'GET, POST, PUT, DELETE',
     allowedHeaders: 'Content-Type,Authorization'
