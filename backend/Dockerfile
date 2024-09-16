@@ -16,5 +16,7 @@ COPY . .
 # Aggiungi permessi di esecuzione per nodemon
 RUN npm install -g nodemon
 
+EXPOSE 5000
+
 # Comando di avvio
 CMD ["nodemon", "index.js"]
