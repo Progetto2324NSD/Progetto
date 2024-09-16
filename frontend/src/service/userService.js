@@ -14,7 +14,7 @@ export const resetPassword = async (email) => {
 //Chiamata API per il login dell'utente
 export const loginUser = async (userData) => {
     try {
-        const response = await axios.post('https://progetto.onrender.com/user/login', userData, {
+        const response = await axios.post('/user/login', userData, {
             withCredentials: true
         });
         return response;
@@ -23,7 +23,6 @@ export const loginUser = async (userData) => {
         throw error;  // Propaga l'errore affinché possa essere gestito dal chiamante
     }
 };
-
 
 //Chiamata API per il controllo dell'OTP
 export const verificaOTP = async (otp, email) => {
