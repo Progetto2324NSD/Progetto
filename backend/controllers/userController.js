@@ -16,6 +16,7 @@ Questo middleware cattura automaticamente le eccezioni e le passa alla gestione 
 const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv').config();
  
 // Reset Password
 const nodemailer = require('nodemailer');
