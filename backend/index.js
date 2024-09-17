@@ -16,7 +16,7 @@ const app = express();
 
 // Cors per permettere le richieste da altri domini
 app.use(cors({
-    origin: 'https://progetto-frontend.vercel.app',
+    origin: 'https://progettofrontend.onrender.com',
     credentials: true
 }));
 
