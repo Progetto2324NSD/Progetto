@@ -235,8 +235,8 @@ const verificaOTP = asyncHandler(async (req, res) => {
  
             res.cookie('token', token, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
-                sameSite: 'Strict',
+                secure: true,
+                sameSite: 'none',
             });
 
             return res.json({
@@ -281,8 +281,8 @@ const cambiaPassword = asyncHandler(async (req, res) => {
 const logout = asyncHandler(async (req, res) => {
     res.cookie('token', '', {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
+        secure: true,
+        sameSite: 'none',
         maxAge: 0,
         path: '/'
     });
