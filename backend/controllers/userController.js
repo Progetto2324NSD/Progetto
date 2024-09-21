@@ -100,6 +100,7 @@ const loginUser = asyncHandler(async (req, res) => {
             sameSite: 'none',
         });
  
+        
         res.json({
             _id: user._id,
             name: user.name,
