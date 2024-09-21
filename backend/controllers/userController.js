@@ -58,8 +58,8 @@ const createUser = asyncHandler (async (req, res) => {
         // Imposta il cookie con il token JWT
         res.cookie('token', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'Strict',
+            secure: true,
+            sameSite: 'none',
         });
  
         // Invia la risposta con i dettagli dell'utente
@@ -96,8 +96,8 @@ const loginUser = asyncHandler(async (req, res) => {
         // Imposta il cookie con il token
         res.cookie('token', token, {
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict',
+            secure: true,
+            sameSite: 'none',
         });
  
         res.json({
@@ -232,8 +232,8 @@ const verificaOTP = asyncHandler(async (req, res) => {
  
             res.cookie('token', token, {
                 httpOnly: true,
-                secure: process.env.NODE_ENV === 'production',
-                sameSite: 'Strict',
+                secure: true,
+                sameSite: 'none',
             });
 
             return res.json({
