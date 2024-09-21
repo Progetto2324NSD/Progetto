@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { createWorkout, showWorkout, lastWorkout, deleteWorkout, timeDayWorkout, distanceDayWorkout, numDayWorkout, avgDayWorkout, graficoAllenamenti, graficoTempo, graficoVelocita, graficoDistanza, calcolaPunteggio } = require('../controllers/workoutController');
+const { createWorkout, showWorkout, lastWorkout, deleteWorkout, timeDayWorkout, distanceDayWorkout, numDayWorkout, graficoAllenamenti, graficoTempo, graficoDistanza, calcolaPunteggio } = require('../controllers/workoutController');
 
 const { protect } = require('../middlewares/authMiddleware');
 
@@ -17,12 +17,10 @@ router.get('/allenamento', protect, calcolaPunteggio);
 router.get('/time-oggi', protect, timeDayWorkout);
 router.get('/distance-oggi', protect, distanceDayWorkout);
 router.get('/num-oggi', protect, numDayWorkout);
-router.get('/avg-oggi', protect, avgDayWorkout);
 
 //Route Grafici
 router.get('/tipo-allenamenti', protect, graficoAllenamenti);
 router.get('/tempo-allenamenti', protect, graficoTempo);
-router.get('/velocita-allenamenti', protect, graficoVelocita);
 router.get('/distanza-allenamenti', protect, graficoDistanza);
 
 

@@ -9,14 +9,13 @@ import { BarChart } from '@mui/x-charts/BarChart';
 import { useMediaQuery, useTheme } from '@mui/material';
 
 // Importa la funzione di servizio
-import { graficoAllenamenti, graficoDistanza, graficoTempo, graficoVelocita } from "../service/workoutService";
+import { graficoAllenamenti, graficoDistanza, graficoTempo } from "../service/workoutService";
 
 const StatChart = ({ selectedButton }) => {
   // Stati per i dati e il tipo di allenamento
   const [dataG, setDataG] = useState([]);
   const [dataT, setDataT] = useState([]);
   const [dataD, setDataD] = useState([]);
-  const [dataV, setDataV] = useState([]);
 
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm')); // True if screen size is small
@@ -74,20 +73,7 @@ const StatChart = ({ selectedButton }) => {
     fetchDataDistanza();
   },[]);
 
-  useEffect(() => {
-    const fetchDataVelocita = async() => {
-      try{
-        const responseVelocita = await graficoVelocita();
-        setDataV(responseVelocita.data);
-      }catch(error){
-        toast.error("Errore nel caricamento dei dati");
-      }
-    }
-    fetchDataVelocita();
-  },[]);
-
   const mesiAbbreviazioni = ["Gen", "Feb", "Mar", "Apr", "Mag", "Giu", "Lug", "Ago", "Set", "Ott", "Nov", "Dic"];
-  const ordineEse = ["Lungo", "Tempo Run", "Fartlek", "Ripetute", "Semplice", "Progress"];
 
   // Funzione che restituisce il grafico da visualizzare
   const renderChart = () => {
@@ -121,14 +107,6 @@ const StatChart = ({ selectedButton }) => {
               height={chartDimensions.height}
             />
           </div>
-        )}
-        {selectedButton === 'velocita' && (
-          <BarChart
-            series={[{ data: dataV }]}
-            xAxis={[{ scaleType: 'band', data: ordineEse }]}
-            width={chartDimensions.width}
-            height={chartDimensions.height}
-          />
         )}
       </div>
     );

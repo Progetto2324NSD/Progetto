@@ -136,18 +136,6 @@ export const graficoTempo = async(type) => {
     }
 };
 
-//Chiamata API per indicare il grafico dei tipi di workouts in base alla velocità
-export const graficoVelocita = async() => {
-    try {
-        const response = await axios.get('/workout/velocita-allenamenti', {
-            withCredentials: true
-        });
-        return response;
-    } catch (error) {
-        throw error;  
-    }
-};
-
 //Chiamata API per indicare il grafico dei tipi di workouts in base alla distanza percorsa
 export const graficoDistanza = async() => {
     try {

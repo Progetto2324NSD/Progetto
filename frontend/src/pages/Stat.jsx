@@ -19,20 +19,19 @@ import './stile/style.css';
 import TimerRoundedIcon from '@mui/icons-material/TimerRounded';
 import LocationOnRoundedIcon from '@mui/icons-material/LocationOnRounded';
 import FitnessCenterRoundedIcon from '@mui/icons-material/FitnessCenterRounded';
-import SpeedRoundedIcon from '@mui/icons-material/SpeedRounded';
 
 
 // Importa la funzione di servizio
-import { avgDayWorkout, distanceDayWorkout, numDayWorkout, timeDayWorkout } from "../service/workoutService";
+import { distanceDayWorkout, numDayWorkout, timeDayWorkout } from "../service/workoutService";
 
 
 function Stat() {
 
     const [selectedButton, setSelectedButton] = useState(null);
+    
     const [tempoTot, setTempoTot] = useState(null);
     const [distTot, setDistTot] = useState(null);
     const [numTot, setNumTot] = useState(null);
-    const [avgTot, setAvgTot] = useState(null);
 
     const handleButtonClick = (buttonId) => { setSelectedButton(buttonId); };
 
@@ -44,8 +43,6 @@ function Stat() {
             return distTot;
           case 'allenamenti':
             return numTot;
-          case 'velocita':
-            return avgTot;
           default:
             return null;
         }
@@ -63,11 +60,6 @@ function Stat() {
 
                 const response2 = await numDayWorkout();
                 setNumTot(response2.data.workoutsToday);
-
-
-                const response3 = await avgDayWorkout();
-                setAvgTot(response3.data.avg);
-
 
             }catch(error){
                 console.error("Errore durante il caricamento dei dati");
@@ -108,14 +100,6 @@ function Stat() {
               description="Allenamenti svolti oggi"
               isSelected={selectedButton === 'allenamenti'}
               onClick={() => handleButtonClick('allenamenti')}
-            />
-            <StatButton
-              title="Velocità media"
-              icon={<SpeedRoundedIcon fontSize="large" />}
-              value={avgTot !== null ? `${avgTot.toFixed(2)} km/h` : 'Caricamento...'}
-              description="Velocità media oggi"
-              isSelected={selectedButton === 'velocita'}
-              onClick={() => handleButtonClick('velocita')}
             />
           </Col>
           <Col md={8} xs={12}>

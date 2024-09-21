@@ -16,7 +16,6 @@ Questo middleware cattura automaticamente le eccezioni e le passa alla gestione 
 const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const dotenv = require('dotenv').config();
  
 // Reset Password
 const nodemailer = require('nodemailer');
@@ -26,7 +25,7 @@ const crypto = require('crypto');
 const User = require('../models/userModel');
  
 // @desc Salva utente
-// @route POST /users
+// @route POST /user
 // @access Private
 const createUser = asyncHandler (async (req, res) => {
  
@@ -59,9 +58,8 @@ const createUser = asyncHandler (async (req, res) => {
         // Imposta il cookie con il token JWT
         res.cookie('token', token, {
             httpOnly: true,
-            secure: true,
+            secure: process.env.NODE_ENV === 'production',
             sameSite: 'Strict',
-            path: '/'
         });
  
         // Invia la risposta con i dettagli dell'utente
@@ -76,7 +74,7 @@ const createUser = asyncHandler (async (req, res) => {
 });
  
 // @desc Login utente
-// @route POST /users
+// @route POST /user/login
 // @access Private
 const loginUser = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
@@ -98,9 +96,8 @@ const loginUser = asyncHandler(async (req, res) => {
         // Imposta il cookie con il token
         res.cookie('token', token, {
             httpOnly: true,
-            secure: true,
-            sameSite: 'none',
-            path: '/'
+            secure: process.env.NODE_ENV === 'production',
+            sameSite: 'strict',
         });
  
         res.json({
@@ -235,8 +232,8 @@ const verificaOTP = asyncHandler(async (req, res) => {
  
             res.cookie('token', token, {
                 httpOnly: true,
-                secure: true,
-                sameSite: 'none',
+                secure: process.env.NODE_ENV === 'production',
+                sameSite: 'Strict',
             });
 
             return res.json({
@@ -281,8 +278,8 @@ const cambiaPassword = asyncHandler(async (req, res) => {
 const logout = asyncHandler(async (req, res) => {
     res.cookie('token', '', {
         httpOnly: true,
-        secure: true,
-        sameSite: 'none',
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
         maxAge: 0,
         path: '/'
     });

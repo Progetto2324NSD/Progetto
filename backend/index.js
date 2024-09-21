@@ -16,7 +16,7 @@ const app = express();
 
 // Cors per permettere le richieste da altri domini
 app.use(cors({
-    origin: 'https://progettofrontend.onrender.com',
+    origin: 'http://localhost:3000',
     credentials: true
 }));
 

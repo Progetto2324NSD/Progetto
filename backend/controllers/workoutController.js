@@ -195,53 +195,10 @@ const numDayWorkout = asyncHandler(async(req, res) => {
   }
 });
 
-// @desc Velocità media allenamento nel giorno corrente
-// @route GET /workout/avg-oggi
-// @access Private
-const avgDayWorkout = asyncHandler(async(req, res) => {
-
-  try{
-    const today = new Date();
-    const startDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    const endDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1);
-  
-    const workoutsToday = await Workout.find({
-      user: req.user._id,
-      date: {
-        $gte: startDay,
-        $lt: endDay
-      }
-    });
-  
-    const distTot = workoutsToday.reduce((acc, workout) => acc + workout.distance, 0);
-
-    const workoutsTime = await Workout.find({
-      user: req.user._id,
-      date: {
-        $gte: startDay,
-        $lt: endDay
-      }
-    });
-  
-    const tempoTot = workoutsTime.reduce((acc, workout) => acc + workout.time, 0);
-    //tempo in ore
-    const tempoH = tempoTot / 3600;
-  
-    const avg = distTot / tempoH;
-  
-    res.status(200).json({ avg });
-
-  }catch (error) {
-    res.status(400).json({ message: 'Errore'});
-  }
-
-});
-
-
 //API per i grafici
 
 // @desc Grafico dei tipi di workouts
-// @route GET /workout/grafico-allenamenti
+// @route GET /workout/tipo-allenamenti
 // @access Private
 const graficoAllenamenti = asyncHandler(async (req, res) => {
     try {
@@ -343,75 +300,9 @@ const graficoDistanza = asyncHandler(async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
-  
-
-// @desc Grafico dei tipi di workouts
-// @route GET /workout/grafico-allenamenti
-// @access Private
-const graficoVelocita = asyncHandler(async (req, res) => {
-  try {
-    // Trova tutti gli allenamenti dell'utente
-    const workouts = await Workout.find({
-      user: req.user._id
-    });
-
-    // Se non ci sono allenamenti, restituisci un array vuoto
-    if (workouts.length === 0) {
-      return res.status(200).json([]);
-    }
-
-    // Definisci l'ordine desiderato dei tipi di allenamento
-    const order = [
-      'Lungo',
-      'Tempo Run',
-      'Fartlek',
-      'Ripetute',
-      'Corsa Semplice',
-      'Progressivo'
-    ];
-
-    // Oggetto per raggruppare le velocità per tipo di allenamento
-    const speedData = {};
-
-    // Calcola la velocità e aggrega i dati
-    workouts.forEach(workout => {
-      if (typeof workout.distance === 'number' && typeof workout.time === 'number' && workout.time > 0) {
-        const speed = workout.distance / workout.time;
-
-        // Verifica se il tipo di allenamento esiste già
-        if (!speedData[workout.type]) {
-          speedData[workout.type] = {
-            totalSpeed: 0,
-            count: 0
-          };
-        }
-
-        // Aggiungi la velocità al tipo di allenamento
-        speedData[workout.type].totalSpeed += speed;
-        speedData[workout.type].count += 1;
-      } else {
-        console.warn(`Invalid data for workout: ${workout}`);
-      }
-    });
-
-    // Trasforma l'oggetto in un array con solo le velocità medie
-    const averageSpeeds = order.map(type => (
-      speedData[type] ? (speedData[type].totalSpeed / speedData[type].count).toFixed(2) : '0.00'
-    ));
-
-    console.log('Average Speeds:', averageSpeeds); // Debugging output
-
-    // Rispondi con le medie delle velocità
-    res.status(200).json(averageSpeeds);
-
-  } catch (error) {
-    console.error('Errore:', error); // Debugging output
-    res.status(400).json({ message: 'Errore nel calcolo della velocità media per tipo di allenamento', error });
-  }
-});
 
 // @desc Grafico del tempo di workout mese x mese workoudei tipi dts
-// @route GET /workout/grafico-tempo
+// @route GET /workout/tempo-allenamenti
 // @access Private
 const graficoTempo = asyncHandler(async (req, res) => {
   try {
@@ -543,10 +434,8 @@ module.exports = {
     timeDayWorkout,
     distanceDayWorkout,
     numDayWorkout,
-    avgDayWorkout,
     graficoAllenamenti,
     graficoTempo,
-    graficoVelocita,
     graficoDistanza,
     calcolaPunteggio
 };

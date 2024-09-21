@@ -31,23 +31,17 @@ function MapPopup({ open, onClose, onDistanceChange }) {
                         top: '50%',
                         left: '50%',
                         transform: 'translate(-50%, -50%)',
-                        // Adattato per dispositivi mobili e desktop
                         width: isMobile ? '90vw' : '80vw', 
-                         // Adattato per dispositivi mobili e desktop
                         height: isMobile ? '70vh' : '80vh',
-                         // Limita la larghezza massima
                         maxWidth: '1200px',
-                        // Limita l'altezza massima
                         maxHeight: '800px', 
                         bgcolor: 'background.paper',
                         borderRadius: '16px',
                         boxShadow: 24,
-                        // Ridotto padding per una migliore gestione dello spazio
                         p: 2, 
                         outline: 'none',
                         display: 'flex',
                         flexDirection: 'column',
-                         // Assicura che nulla esca fuori
                         overflow: 'hidden',
                     }}
                 >

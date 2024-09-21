@@ -74,12 +74,17 @@ cron.schedule('30 13 * * *', asyncHandler(async () => {
   }
 }));
 
+// @desc Restituisce la notifica
+// @route GET /notifiche/notifiche
+// @access Private
 const getNoti = asyncHandler(async (req, res) => {
   const notifications = await Notification.find({ user: req.user._id });
   res.json(notifications);
 });
 
-// Elimina una notifica
+// @desc Cancella la notifica
+// @route DELETE /notifiche/notifiche:id
+// @access Private
 const deleteNoti = asyncHandler(async (req, res) => {
 
   const notification = await Notification.findById(req.params.id);

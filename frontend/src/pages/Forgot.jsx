@@ -18,13 +18,13 @@ import { resetPassword } from "../service/userService";
 function Forgot() {
     const [email, setEmail] = useState("");
     const [showModal, setShowModal] = useState(false);
-    const [isSubmitting, setIsSubmitting] = useState(false); // Stato per gestire il bottone
-    const [attemptsLeft, setAttemptsLeft] = useState(5); // Stato per tenere traccia degli invii rimanenti
+    const [isSubmitting, setIsSubmitting] = useState(false);    
+    const [attemptsLeft, setAttemptsLeft] = useState(5);
 
     // Funzione per gestire il limite giornaliero di invii
     const checkResetAttempts = (email) => {
         const storedData = localStorage.getItem(email);
-        const currentDate = new Date().toDateString(); // Otteniamo solo la data corrente (senza ora)
+        const currentDate = new Date().toDateString();
 
         if (storedData) {
             const { count, lastRequestDate } = JSON.parse(storedData);
@@ -34,18 +34,16 @@ function Forgot() {
                 setAttemptsLeft(5 - count);
                 if (count >= 5) {
                     toast.error("Hai raggiunto il limite giornaliero di 5 richieste.");
+
                     // Disabilita il bottone
                     setIsSubmitting(true); 
-                    // Limite raggiunto, blocca invio
                     return false; 
                 }
             } else {
-                // Se la data è diversa, resettiamo il conteggio per il nuovo giorno
                 localStorage.setItem(email, JSON.stringify({ count: 0, lastRequestDate: currentDate }));
                 setAttemptsLeft(5);
             }
         } else {
-            // Nessun dato salvato, inizializziamo per questa email
             localStorage.setItem(email, JSON.stringify({ count: 0, lastRequestDate: currentDate }));
             setAttemptsLeft(5);
         }
@@ -59,9 +57,7 @@ function Forgot() {
         const { count, lastRequestDate } = JSON.parse(storedData);
         const newCount = count + 1;
 
-        // Aggiorna i dati nel localStorage
         localStorage.setItem(email, JSON.stringify({ count: newCount, lastRequestDate }));
-        // Aggiorna tentativi rimanenti
         setAttemptsLeft(5 - newCount); 
     };
 
@@ -69,14 +65,12 @@ function Forgot() {
         e.preventDefault();
 
         if (!checkResetAttempts(email)) {
-            // Se il limite è stato raggiunto, blocchiamo l'invio
             return;
         }
 
         setIsSubmitting(true);
 
         try {
-            // Usa la funzione di servizio esterna
             const response = await resetPassword(email);  
     
             if (response.status === 200) {
@@ -94,32 +88,27 @@ function Forgot() {
 
                 setTimeout(() => {
                     clearInterval(interval);
-                    // Rimuove il toast del countdown
-                    toast.dismiss(countdownToast);  
-                    // Mostra il popup per inserire l'OTP
+
+                    toast.dismiss(countdownToast);
+
                     setShowModal(true);  
-                    // Riabilita il bottone
                     setIsSubmitting(false); 
                 }, 3000);
 
-                // Aggiorna il numero di tentativi
                 updateResetAttempts(email);
 
             } else {
                 toast.error("Errore durante l'invio dell'email.");
-                // Riabilita il bottone anche in caso di errore
                 setIsSubmitting(false); 
             }
         } catch (error) {
             console.error("Errore durante il reset della password:", error);
             const errorMessage = error.response?.data?.message || "Errore durante il reset della password. Verifica la tua email e riprova.";
             toast.error(errorMessage);
-            // Riabilita il bottone in caso di errore
             setIsSubmitting(false); 
         }
     }
 
-    // Controlla i tentativi rimanenti al montaggio del componente
     useEffect(() => {
         if (email) {
             checkResetAttempts(email);
@@ -165,7 +154,6 @@ function Forgot() {
                             <button 
                                 className="btn btn-lg btn-primary w-100 fs-6"
                                 onClick={handleSubmit}
-                                // Disabilita il bottone se isSubmitting è true
                                 disabled={isSubmitting} 
                             >
                                 Reset
